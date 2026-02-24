@@ -284,6 +284,8 @@ body{
 .mb-md{margin-bottom:12px}
 .flex-col{display:flex;flex-direction:column}
 .flex-1{flex:1;min-height:0}
+.internal-disclaimer{font-family:var(--font-pixel);font-size:7px;color:var(--crimson-light);text-align:center;opacity:0.7;padding-top:8px;letter-spacing:1px}
+.mfg-logo{position:fixed;bottom:12px;right:12px;z-index:998;width:48px;height:auto;opacity:0.7;pointer-events:none}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -355,7 +357,7 @@ body{
 
   /* Companion & speech bubble */
   .companion-tyrion{bottom:8px;left:8px}
-  .tyrion-speech-bubble{bottom:52px;left:8px;max-width:240px;font-size:13px}
+  .tyrion-speech-bubble{bottom:68px;left:8px;max-width:240px;font-size:13px}
 
   /* Lightbox */
   .lightbox-overlay img{max-width:98vw;max-height:85vh}
@@ -441,7 +443,7 @@ body{
 
 /* Tyrion speech bubble (easter egg) */
 .tyrion-speech-bubble{
-  position:fixed;bottom:56px;left:12px;z-index:999;
+  position:fixed;bottom:72px;left:12px;z-index:999;
   max-width:280px;padding:10px 14px;
   background:linear-gradient(135deg,#2a2218,#1e1a14);
   border:2px solid var(--gold);border-radius:8px 8px 8px 0;
@@ -778,6 +780,9 @@ body{
   </div>
 </div>
 
+<!-- MFG Logo -->
+<img class="mfg-logo" src="mfg%20logo.png" alt="MFG">
+
 <!-- Tyrion Speech Bubble (Easter Egg) -->
 <div class="tyrion-speech-bubble" id="tyrion-speech-bubble"></div>
 
@@ -792,7 +797,7 @@ body{
     <div class="castle-tower" style="height:12px"></div>
   </div>
   <button class="chapter-select-btn" onclick="toggleChapterMenu()">CHAPTERS</button>
-  <button class="chapter-select-btn" id="ungame-btn" onclick="openUngame()" style="display:none">&#128220; JUST THE FACTS</button>
+  <button class="chapter-select-btn" id="ungame-btn" onclick="openUngame()" style="display:none;background:var(--crimson);border-color:var(--crimson-light);color:#fff">&#128220; JUST THE FACTS</button>
 </div>
 <div class="chapter-menu" id="chapter-menu">
   <button class="chapter-menu-item" onclick="goToScreen('start-screen')">Start Screen</button>
@@ -849,6 +854,7 @@ body{
     </div>
 
     <button class="cta-btn" onclick="startQuest()">BEGIN YOUR QUEST</button>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -919,6 +925,7 @@ body{
       <button class="nav-btn" onclick="goToScreen('start-screen')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('level-2')">CONTINUE &#9654;</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -944,7 +951,7 @@ body{
             <li>⭐ When ML/PMM signs off, mark it with an <strong>asterisk *</strong> to show it's final.</li>
           </ul>
           <div class="treasury-meter">
-            <h4>INVESTMENT SCALE</h4>
+            <h4>STRATEGIC PRIORITY / INVESTMENT LEVEL</h4>
             <div class="treasury-bar">
               <div class="treasury-coins">
                 <span class="coin"></span><span class="coin"></span><span class="coin"></span>
@@ -991,10 +998,16 @@ body{
       <p>You have two jobs: <strong>(1)</strong> Update the Tyrion deck at least monthly. <strong>(2)</strong> Include Tyrion in your PA meetings and decks. The goal is visibility, not policing.</p>
     </div>
 
+    <div class="dialogue-box mb-sm" style="border-color:var(--gold);text-align:center">
+      <span class="speaker">🎯 THE ULTIMATE GOAL</span>
+      <p>The ultimate goal is for any MFGer, anywhere to see what any other MFGer, anywhere is doing with all their PA's domains &mdash; by simply checking out the Tyrion deck.</p>
+    </div>
+
     <div class="nav-row">
       <button class="nav-btn" onclick="goToScreen('level-1')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('level-3')">CONTINUE &#9654;</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -1024,11 +1037,11 @@ body{
         <div class="house-name">NA</div>
         <div class="house-roster" style="display:block">
           <div class="roster-section">
-            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-label">⚔ ACCOUNTABLE</div>
             <div class="roster-names"><strong>Erica / Mindy</strong></div>
           </div>
           <div class="roster-section">
-            <div class="roster-label">TEAM</div>
+            <div class="roster-label">INFORMED</div>
             <div class="roster-names">Kimberly, Sarah, Theresa, Rachel</div>
           </div>
         </div>
@@ -1038,11 +1051,11 @@ body{
         <div class="house-name">EMEA</div>
         <div class="house-roster" style="display:block">
           <div class="roster-section">
-            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-label">⚔ ACCOUNTABLE</div>
             <div class="roster-names"><strong>Jo P / Rosanna</strong></div>
           </div>
           <div class="roster-section">
-            <div class="roster-label">TEAM</div>
+            <div class="roster-label">INFORMED</div>
             <div class="roster-names">Grant, Regional Investment Lead</div>
           </div>
         </div>
@@ -1052,11 +1065,11 @@ body{
         <div class="house-name">APAC</div>
         <div class="house-roster" style="display:block">
           <div class="roster-section">
-            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-label">⚔ ACCOUNTABLE</div>
             <div class="roster-names"><strong>Kenward / Jamarr</strong></div>
           </div>
           <div class="roster-section">
-            <div class="roster-label">TEAM</div>
+            <div class="roster-label">INFORMED</div>
             <div class="roster-names">Karl, Regional Investment Lead</div>
           </div>
         </div>
@@ -1082,6 +1095,7 @@ body{
       <button class="nav-btn" onclick="goToScreen('level-2')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('level-4')">CONTINUE &#9654;</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -1105,7 +1119,7 @@ body{
         <span class="tome-icon">📄</span>
         <h4>1. The Original Proposal</h4>
         <p>The deck that pitched the idea of domains to Michael and Carrie.</p>
-        <a class="deck-link" href="https://docs.google.com/presentation/d/1IpOTQEZ9f3yZnBiPiOzP5xhBleWAN3kaQNfJCAZ5PAw/edit?slide=id.g284072b41e1_0_1721#slide=id.g284072b41e1_0_1721" target="_blank" rel="noopener">📜 OPEN PETITION DECK</a>
+        <a class="deck-link" href="https://docs.google.com/presentation/d/1IpOTQEZ9f3yZnBiPiOzP5xhBleWAN3kaQNfJCAZ5PAw/edit?slide=id.g284072b41e1_0_1721#slide=id.g284072b41e1_0_1721" target="_blank" rel="noopener">📜 OPEN CLIENT DECK</a>
       </div>
       <div class="tome">
         <span class="tome-icon">🗾</span>
@@ -1119,6 +1133,7 @@ body{
       <button class="nav-btn" onclick="goToScreen('level-3')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('faq-screen')">CONTINUE &#9654;</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -1135,43 +1150,43 @@ body{
     <div class="faq-grid mb-sm">
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>❓ What is a "domain" in Tyrion?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">A domain is a specific audience, partnership, or messaging space that a PA works in within a market. Tyrion maps these out so everyone can spot overlaps.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">A domain is a <strong>context, moment, passion point, or IP</strong> where Google can show up and/or buy media. Think of it as any space where a PA is active &mdash; whether that's a cultural moment like the Super Bowl, a passion point like gaming, or a partnership with a specific publisher. Tyrion maps every PA's domains so the whole team can see where they overlap.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>📅 How often do I update the deck?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">At least once a month. Also update whenever a big PA strategy decision is made. Leave a comment on your slide when you change it.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">Update <strong>as soon as decisions are made and domains are locked</strong> &mdash; don't wait for a monthly cadence if things change sooner. At minimum, review your slides once a month to make sure nothing is stale. Always leave a comment on your slide explaining what changed and why, so others can follow the history.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🟢 What does the green shading mean?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">Lighter green = lighter investment. Darker green = heavier investment. Two PAs can share a domain &mdash; the shading shows who's spending more.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">The green shading represents both <strong>relative media spend and strategic priority</strong>. Lighter green means a PA has a lighter presence in that domain. Darker green means heavier investment and focus. Two PAs can absolutely share a domain &mdash; the shading makes it clear at a glance who's leaning in more, so teams can have informed conversations about where effort is concentrated.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>💼 Do I bring up Tyrion in every client meeting?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">No. It can live in the appendix. Just make clients aware it exists. For major PA decks, include it as its own section.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">Not every meeting &mdash; use your judgment. For <strong>major PA strategy presentations</strong> to Google stakeholders (ML, PMM), include Tyrion as its own section so they can see the full domain landscape. For routine check-ins, a Tyrion slide in the appendix is fine. The key is that stakeholders know the map exists and can reference it when making decisions.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>📞 Who do I contact with questions?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">Reach out to Ed (global) or your regional leads. NA: Erica/Mindy. EMEA: Jo P/Rosanna. APAC: Kenward/Jamarr.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner"><strong>Ed</strong> is the global coordinator &mdash; reach out to him for cross-regional questions or if you're unsure who owns something. For region-specific questions, go to your accountable leads: <strong>NA:</strong> Erica/Mindy. <strong>EMEA:</strong> Jo P/Rosanna. <strong>APAC:</strong> Kenward/Jamarr. You can also drop questions in the <strong>group chat</strong> (link below) for quick answers from the wider team.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🚫 Is Tyrion meant to restrict PAs?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">No. Tyrion is about <strong>visibility</strong>, not policing. It helps make sure overlaps are intentional, not accidental.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">No. Tyrion is about <strong>visibility, not policing</strong>. Right now, PAs often operate in silos &mdash; each doing their own thing without knowing what others are doing in the same space. Tyrion doesn't restrict anyone. It just makes overlaps visible so teams can flag them to stakeholders as either <strong>potential problems or opportunities</strong>. That's a big upgrade from flying blind.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🤝 What if two PAs share a domain?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">That's fine! Tyrion just makes the overlap visible. Green shading shows who's investing more. The goal is informed overlap, not zero overlap.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">That's expected &mdash; and often a good thing. The goal is <strong>informed overlap, not zero overlap</strong>. When two PAs share a domain, Tyrion makes it visible so teams can flag it to Google stakeholders as either a problem (wasted spend, conflicting messaging) or an opportunity (combined reach, coordinated campaigns). This is way better than the old approach where PAs operated in silos and overlaps went unnoticed.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🤖 How does Gemini factor in?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">Gemini touches many PAs at once, which creates more overlaps. That's exactly why Tyrion's visibility is so important right now.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">Gemini the <strong>product</strong> (not the PA) is being integrated into almost every other PA as a feature &mdash; Gemini chat on Pixel, Gemini Enterprise for B2B, Gemini in Search, and more. This means multiple PAs are now active in AI-related domains at the same time, creating overlaps that didn't exist before. Tyrion helps make these new overlaps visible so teams can coordinate rather than compete.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>⭐ What does the asterisk (*) mean?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">When ML/PMM approves a direction, mark it with an asterisk (*). This means it's a final decision, not a draft.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">The asterisk (*) means a domain assignment has been <strong>approved by ML/PMM</strong> &mdash; it's a locked decision, not a draft or a suggestion. When you see an asterisk on a slide, that domain allocation is final. If your slide doesn't have one yet, it means it's still in progress and open for discussion. Once you get sign-off, add the asterisk so everyone knows it's confirmed.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🗺️ Where do I start with my region?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">Open the Tyrion deck and find your region's slides. If they're empty, that's OK &mdash; you're building the map from scratch. Talk to your regional lead to get started.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">Start by opening the Tyrion deck and finding your region's slides. Identify the PAs you work on and list out their domains &mdash; the contexts, moments, passion points, and IPs where that PA shows up or buys media. If the slides are empty, that's OK &mdash; you're building the map from scratch. Talk to your accountable lead to align on how to fill it in, and don't forget to use the green shading to show relative investment level.</div></div>
       </div>
     </div>
 
@@ -1183,6 +1198,7 @@ body{
       <button class="nav-btn" onclick="goToScreen('level-4')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('completion-screen')">COMPLETE TRAINING &#9654;</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -1226,6 +1242,7 @@ body{
     <div style="margin-top:16px">
       <button class="cta-btn" onclick="goToScreen('start-screen')">RETURN TO THE THRONE ROOM</button>
     </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
 
@@ -1725,7 +1742,7 @@ body{
   var speechBubble = document.getElementById('tyrion-speech-bubble');
   var quoteTimeout = null;
 
-  companion.addEventListener('click', function(){
+  function showTyrionQuote(){
     if(quoteTimeout) clearTimeout(quoteTimeout);
     speechBubble.classList.remove('show');
     void speechBubble.offsetWidth;
@@ -1734,8 +1751,18 @@ body{
     quoteIndex = (quoteIndex + 1) % tyrionQuotes.length;
     quoteTimeout = setTimeout(function(){
       speechBubble.classList.remove('show');
-    }, 4000);
-  });
+    }, 5000);
+  }
+
+  // Click to show quote
+  companion.addEventListener('click', showTyrionQuote);
+
+  // Auto-show a quote every 20 seconds (only when companion is visible)
+  setInterval(function(){
+    if(companion.classList.contains('visible') && !speechBubble.classList.contains('show')){
+      showTyrionQuote();
+    }
+  }, 20000);
 
 })();
 </script>
