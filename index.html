@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TYRION — Domains of Ice and Fire</title>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c8a84e;--gold-light:#e8d68c;
+  --crimson:#8b1a1a;--crimson-light:#c62828;
+  --charcoal:#1a1a1a;--dark-bg:#0d0d0d;
+  --stone:#3a3a3a;--stone-light:#5a5a5a;
+  --parchment:#f5e6c8;--parchment-dark:#d4c4a0;
+  --ice-blue:#5b9bd5;
+  --green-light:#a8d5a2;--green-mid:#4caf50;--green-dark:#1b5e20;
+  --font-medieval:'MedievalSharp',cursive;
+  --font-pixel:'Press Start 2P',monospace;
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--dark-bg);color:#e0e0e0;
+  height:100vh;overflow:hidden;
+  font-size:16px;line-height:1.6;
+}
+
+/* HORIZONTAL SLIDER */
+.slider{
+  display:flex;height:100vh;
+  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  will-change:transform;
+  position:relative;z-index:1;
+}
+
+/* SCREENS */
+.screen{
+  flex:0 0 100vw;width:100vw;height:100vh;
+  overflow-y:auto;overflow-x:hidden;
+  padding:42px 40px 20px;
+  display:flex;flex-direction:column;
+}
+.screen-inner{
+  max-width:1200px;width:100%;
+  margin:0 auto;flex:1;
+  display:flex;flex-direction:column;
+}
+
+/* PROGRESS BAR */
+.progress-bar-container{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:linear-gradient(180deg,#2a2a2a,#1a1a1a);
+  border-bottom:2px solid var(--gold);
+  padding:5px 16px;display:none;align-items:center;gap:10px;
+  height:36px;
+}
+.progress-bar-container.visible{display:flex}
+.progress-label{font-family:var(--font-pixel);font-size:7px;color:var(--gold);white-space:nowrap}
+.progress-track{flex:1;height:18px;background:#111;border:2px solid var(--stone);border-radius:2px;position:relative;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--crimson),var(--crimson-light));transition:width 0.8s ease;position:relative}
+.progress-fill::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 18px,rgba(0,0,0,0.3) 18px,rgba(0,0,0,0.3) 20px)}
+.castle-towers{display:flex;gap:3px;align-items:flex-end;height:18px}
+.castle-tower{width:12px;background:var(--stone);border:1px solid #555;border-radius:2px 2px 0 0;transition:all 0.5s ease}
+.castle-tower.lit{background:var(--gold);border-color:var(--gold-light);box-shadow:0 0 6px rgba(200,168,78,0.5)}
+.chapter-select-btn{font-family:var(--font-pixel);font-size:7px;color:var(--gold);background:none;border:1px solid var(--gold);padding:3px 6px;cursor:pointer;border-radius:2px;white-space:nowrap}
+.chapter-select-btn:hover{background:rgba(200,168,78,0.15)}
+.chapter-menu{position:fixed;top:40px;right:16px;background:#1a1a1a;border:2px solid var(--gold);border-radius:4px;z-index:1001;display:none;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.8)}
+.chapter-menu.open{display:block}
+.chapter-menu-item{display:block;width:100%;text-align:left;padding:8px 14px;font-family:var(--font-body);font-size:13px;color:#ccc;background:none;border:none;cursor:pointer;border-bottom:1px solid #333}
+.chapter-menu-item:last-child{border-bottom:none}
+.chapter-menu-item:hover{background:rgba(200,168,78,0.1);color:var(--gold)}
+.ungame-btn{position:fixed;bottom:12px;right:12px;z-index:999;font-family:var(--font-body);font-size:12px;color:var(--parchment);background:rgba(30,30,30,0.9);border:1px solid var(--gold);padding:5px 12px;cursor:pointer;border-radius:4px;display:none}
+.ungame-btn.visible{display:block}
+.ungame-btn:hover{background:rgba(200,168,78,0.2)}
+
+/* Raven */
+.pixel-raven{position:fixed;z-index:9999;pointer-events:none;width:40px;height:30px;top:-40px;left:-40px}
+.pixel-raven.flying{animation:ravenFly 2s ease-in-out forwards}
+@keyframes ravenFly{0%{top:-40px;left:-40px;transform:rotate(-10deg)}30%{top:30vh;left:40vw;transform:rotate(5deg)}60%{top:20vh;left:70vw;transform:rotate(-5deg)}100%{top:-40px;left:110vw;transform:rotate(10deg)}}
+@keyframes flicker{0%{transform:scaleY(1) scaleX(1);opacity:1}50%{transform:scaleY(0.95) scaleX(1.05);opacity:1}100%{transform:scaleY(1.08) scaleX(0.92);opacity:0.95}}
+
+/* START SCREEN */
+#start-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:20px;
+  background:radial-gradient(ellipse at 50% 30%,#1a1510,var(--dark-bg));
+}
+#start-screen .screen-inner{max-width:750px;align-items:center;justify-content:center}
+.title-area{margin-bottom:16px}
+.main-title{font-family:var(--font-medieval);font-size:clamp(40px,8vw,68px);color:var(--gold);text-shadow:0 0 20px rgba(200,168,78,0.5),0 4px 8px rgba(0,0,0,0.8);letter-spacing:4px;margin-bottom:4px}
+.subtitle{font-family:var(--font-medieval);font-size:clamp(14px,2.5vw,20px);color:var(--gold-light);opacity:0.8;margin-bottom:2px}
+.tagline{font-size:14px;color:#999;font-style:italic;margin-bottom:12px}
+.time-estimate{font-family:var(--font-pixel);font-size:8px;color:var(--stone-light);margin-bottom:16px}
+
+/* Pixel Tyrion */
+.pixel-tyrion{width:48px;height:48px;image-rendering:pixelated;display:inline-block;flex-shrink:0}
+.pixel-tyrion svg{width:100%;height:100%}
+.pixel-tyrion.sm{width:36px;height:36px}
+
+/* Dialogue Box */
+.dialogue-box{
+  background:linear-gradient(135deg,#2a2218,#1e1a14);
+  border:2px solid var(--gold);border-radius:6px;
+  padding:14px 18px;text-align:left;position:relative;
+  box-shadow:0 2px 12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(200,168,78,0.1);
+}
+.dialogue-box .speaker{font-family:var(--font-pixel);font-size:8px;color:var(--gold);position:absolute;top:-10px;left:12px;background:var(--charcoal);padding:2px 8px;border:1px solid var(--gold);border-radius:2px}
+.dialogue-box p{font-size:16px;line-height:1.6;color:var(--parchment)}
+.dialogue-box-with-char{display:flex;gap:10px;align-items:flex-start}
+.dialogue-box-with-char .dialogue-box{flex:1}
+
+/* Legend */
+.legend-box{background:rgba(30,25,18,0.9);border:2px solid var(--stone);border-radius:6px;padding:14px 18px;margin-bottom:16px;text-align:left;width:100%}
+.legend-box h3{font-family:var(--font-pixel);font-size:8px;color:var(--gold);margin-bottom:8px}
+.legend-box .legend-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 20px}
+.legend-item{font-size:14px;color:#ccc}
+.legend-item .got-term{color:var(--gold-light);font-weight:600}
+.legend-item .real-term{color:#aaa}
+
+/* Buttons */
+.cta-btn{
+  display:inline-block;font-family:var(--font-pixel);font-size:10px;
+  color:var(--parchment);background:linear-gradient(180deg,var(--crimson-light),var(--crimson));
+  border:2px solid var(--gold);padding:10px 24px;cursor:pointer;border-radius:4px;
+  text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;
+  box-shadow:0 3px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+  min-width:44px;min-height:44px;text-decoration:none;
+}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(139,26,26,0.5);background:linear-gradient(180deg,#d32f2f,var(--crimson))}
+.cta-btn:active{transform:translateY(0)}
+.nav-btn{font-family:var(--font-pixel);font-size:9px;color:var(--gold);background:linear-gradient(180deg,#333,#222);border:2px solid var(--gold);padding:8px 18px;cursor:pointer;border-radius:3px;transition:all 0.2s;min-width:44px;min-height:44px}
+.nav-btn:hover{background:linear-gradient(180deg,#444,#333)}
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:12px;flex-shrink:0}
+
+/* Chapter Title */
+.chapter-title-card{text-align:center;margin-bottom:12px;padding:10px 16px;border:2px solid var(--gold);background:linear-gradient(135deg,rgba(200,168,78,0.05),rgba(139,26,26,0.05));border-radius:4px;position:relative;flex-shrink:0}
+.chapter-title-card::before,.chapter-title-card::after{content:'';position:absolute;top:50%;width:24px;height:2px;background:var(--gold)}
+.chapter-title-card::before{left:10px}
+.chapter-title-card::after{right:10px}
+.chapter-num{font-family:var(--font-pixel);font-size:8px;color:var(--stone-light);margin-bottom:4px;display:block}
+.chapter-title{font-family:var(--font-medieval);font-size:clamp(24px,4.5vw,34px);color:var(--gold);text-shadow:0 2px 8px rgba(0,0,0,0.6)}
+
+/* Content Panels */
+.parchment-panel{background:linear-gradient(135deg,#2a2418,#1e1a14);border:1px solid var(--stone);border-radius:6px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.parchment-panel h3{font-family:var(--font-medieval);font-size:20px;color:var(--gold);margin-bottom:8px}
+.parchment-panel p,.parchment-panel li{font-size:15px;line-height:1.6;color:#ddd}
+.parchment-panel ul,.parchment-panel ol{padding-left:18px;margin:6px 0}
+.parchment-panel li{margin-bottom:4px}
+.got-frame{font-family:var(--font-medieval);font-size:15px;color:var(--gold-light);font-style:italic;margin:8px 0;padding:6px 12px;border-left:3px solid var(--gold);background:rgba(200,168,78,0.05)}
+
+/* Two-col grid */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* Plain box */
+.plain-box{background:linear-gradient(135deg,#1a2a1a,#142014);border:1px solid var(--green-mid);border-radius:6px;padding:12px 16px;flex-shrink:0}
+.plain-box-label{font-family:var(--font-pixel);font-size:8px;color:var(--green-mid);margin-bottom:6px;display:block}
+.plain-box p{font-size:15px;color:#ccc;line-height:1.6}
+
+/* Quiz */
+.quiz-panel{background:linear-gradient(135deg,#2a1a2a,#1e1420);border:1px solid var(--ice-blue);border-radius:6px;padding:16px 18px}
+.quiz-panel h3{font-family:var(--font-medieval);font-size:20px;color:var(--ice-blue);margin-bottom:8px}
+.quiz-panel p{font-size:15px;color:#ddd;margin-bottom:10px;line-height:1.6}
+.quiz-option{display:block;width:100%;text-align:left;font-family:var(--font-body);font-size:14px;color:var(--parchment);background:rgba(50,50,60,0.6);border:1px solid var(--stone);padding:10px 14px;margin-bottom:5px;cursor:pointer;border-radius:4px;transition:all 0.2s;min-height:40px}
+.quiz-option:hover{border-color:var(--ice-blue);background:rgba(91,155,213,0.1)}
+.quiz-option.correct{border-color:var(--green-mid);background:rgba(76,175,80,0.15);color:var(--green-light)}
+.quiz-option.incorrect{border-color:var(--crimson-light);background:rgba(198,40,40,0.15);color:#e57373;opacity:0.7}
+.quiz-option:disabled{cursor:default}
+.quiz-result{font-size:13px;padding:8px 12px;border-radius:4px;margin-top:6px;display:none}
+.quiz-result.show{display:block}
+.quiz-result.pass{background:rgba(76,175,80,0.1);border:1px solid var(--green-mid);color:var(--green-light)}
+.quiz-result.fail{background:rgba(198,40,40,0.1);border:1px solid var(--crimson-light);color:#e57373}
+
+/* Decrees */
+.decree{background:linear-gradient(135deg,#2a2418,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:16px 18px;position:relative}
+.decree::before{content:'';position:absolute;top:-1px;right:10px;width:22px;height:22px;background:radial-gradient(circle,var(--crimson-light),var(--crimson));border-radius:50%;border:2px solid var(--gold);box-shadow:0 2px 6px rgba(0,0,0,0.5)}
+.decree h3{font-family:var(--font-medieval);font-size:20px;color:var(--gold);margin-bottom:8px;padding-right:30px}
+.decree p,.decree li{font-size:15px;line-height:1.6;color:#ddd}
+.decree ul{padding-left:18px;margin:6px 0}
+.decree li{margin-bottom:4px}
+
+/* Treasury Meter */
+.treasury-meter{margin:8px 0;padding:8px;background:rgba(20,30,20,0.5);border:1px solid var(--gold);border-radius:4px}
+.treasury-meter h4{font-family:var(--font-pixel);font-size:7px;color:var(--gold);margin-bottom:6px;text-align:center}
+.treasury-bar{height:24px;background:linear-gradient(90deg,#a8d5a2 0%,#66bb6a 25%,#43a047 50%,#2e7d32 75%,#1b5e20 100%);border-radius:3px;position:relative;border:1px solid var(--gold)}
+.treasury-labels{display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:#aaa}
+.treasury-coins{position:absolute;top:50%;transform:translateY(-50%);display:flex;width:100%;justify-content:space-around;padding:0 6px}
+.coin{width:12px;height:12px;background:radial-gradient(circle at 40% 40%,var(--gold-light),var(--gold));border-radius:50%;border:1px solid #8b6914;box-shadow:0 1px 2px rgba(0,0,0,0.5)}
+
+/* Tyrion Quote */
+.tyrion-quote{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#2a2218,#1e1410);border:2px solid var(--gold);border-radius:6px;padding:14px 18px}
+.tyrion-quote blockquote{font-family:var(--font-medieval);font-size:18px;color:var(--gold-light);line-height:1.6;font-style:italic}
+
+/* Deck link */
+.deck-link{display:inline-block;font-family:var(--font-pixel);font-size:10px;color:#fff;background:linear-gradient(180deg,#2e7d32,#1b5e20);border:2px solid var(--gold);padding:12px 24px;border-radius:4px;text-decoration:none;cursor:pointer;transition:all 0.3s;animation:glowPulse 2s ease-in-out infinite;min-height:44px;letter-spacing:0.5px}
+.deck-link:hover{background:linear-gradient(180deg,#43a047,#2e7d32);box-shadow:0 0 20px rgba(76,175,80,0.5);transform:translateY(-2px)}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px rgba(76,175,80,0.3)}50%{box-shadow:0 0 16px rgba(76,175,80,0.5)}}
+
+/* Houses */
+.houses-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.house-card{background:linear-gradient(180deg,#2a2218,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:14px;text-align:center}
+.house-sigil{font-size:36px;margin-bottom:4px;display:block}
+.house-name{font-family:var(--font-medieval);font-size:22px;color:var(--gold);margin-bottom:8px}
+.house-roster{text-align:left;margin-top:6px;padding-top:6px;border-top:1px solid var(--stone)}
+.roster-section{margin-bottom:4px}
+.roster-label{font-family:var(--font-pixel);font-size:7px;color:var(--gold);margin-bottom:3px}
+.roster-names{font-size:14px;color:#ccc;line-height:1.5}
+
+/* Hand card */
+.hand-card{background:linear-gradient(135deg,#2a2218,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:14px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 0 10px rgba(200,168,78,0.15);flex-shrink:0}
+.hand-icon{font-size:32px;flex-shrink:0}
+.hand-card h3{font-family:var(--font-medieval);font-size:20px;color:var(--gold);margin-bottom:3px}
+.hand-card p{font-size:15px;color:#ccc}
+.hand-card .got-quote{font-family:var(--font-medieval);font-size:13px;color:var(--gold-light);font-style:italic;margin-top:3px}
+
+/* Laws */
+.laws-panel{background:linear-gradient(180deg,#222,#1a1a1a);border:1px solid var(--stone);border-radius:6px;padding:14px 18px}
+.laws-panel h3{font-family:var(--font-medieval);font-size:20px;color:var(--gold);margin-bottom:10px;text-align:center}
+.laws-panel ol{padding-left:22px}
+.laws-panel li{font-size:15px;line-height:1.6;color:#ddd;margin-bottom:5px}
+
+/* Library */
+.library-shelf{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tome{background:linear-gradient(135deg,#2a2218,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:24px;text-align:center;transition:all 0.3s;animation:glowPulse 3s ease-in-out infinite}
+.tome:hover{transform:translateY(-3px);box-shadow:0 0 20px rgba(200,168,78,0.4)}
+.tome-icon{font-size:48px;margin-bottom:10px;display:block}
+.tome h4{font-family:var(--font-medieval);font-size:22px;color:var(--gold);margin-bottom:8px}
+.tome p{font-size:15px;color:#aaa;margin-bottom:12px;line-height:1.5}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0;align-content:start}
+.faq-item{background:linear-gradient(135deg,#2a2218,#1e1a14);border:1px solid var(--stone);border-radius:6px;overflow:hidden;transition:border-color 0.3s;align-self:start}
+.faq-item.open{border-color:var(--gold)}
+.faq-question{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;font-family:var(--font-body);font-size:15px;font-weight:600;color:var(--parchment);background:none;border:none;padding:12px 14px;cursor:pointer;min-height:44px}
+.faq-question:hover{color:var(--gold)}
+.faq-arrow{font-size:14px;transition:transform 0.3s;flex-shrink:0;color:var(--gold)}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.faq-item.open .faq-answer{max-height:300px}
+.faq-answer-inner{padding:0 14px 12px;font-size:14px;color:#ccc;line-height:1.6}
+
+/* Completion */
+#completion-screen .celebration{text-align:center;margin-bottom:12px}
+.fireworks{position:relative;height:50px;margin-bottom:8px}
+.firework{position:absolute;width:6px;height:6px;border-radius:50%;animation:firework 1.5s ease-out infinite}
+@keyframes firework{0%{transform:translateY(0) scale(1);opacity:1}50%{transform:translateY(-40px) scale(1.3);opacity:1}100%{transform:translateY(-55px) scale(0);opacity:0}}
+.completion-title{font-family:var(--font-medieval);font-size:clamp(28px,5vw,44px);color:var(--gold);text-shadow:0 0 16px rgba(200,168,78,0.5);margin-bottom:6px}
+.badge{display:flex;width:80px;height:80px;background:radial-gradient(circle,var(--crimson-light),var(--crimson));border:3px solid var(--gold);border-radius:50%;align-items:center;justify-content:center;margin:10px auto;box-shadow:0 0 20px rgba(200,168,78,0.4);font-size:36px}
+.proclamation{background:linear-gradient(135deg,#2a2418,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:18px 22px;text-align:left}
+.proclamation h3{font-family:var(--font-medieval);font-size:22px;color:var(--gold);margin-bottom:10px;text-align:center}
+.proclamation ol{padding-left:22px}
+.proclamation li{font-size:16px;line-height:1.6;color:#ddd;margin-bottom:8px}
+.proclamation .got-flavor{font-family:var(--font-medieval);font-size:14px;color:var(--gold-light);font-style:italic}
+
+/* Lightbox */
+.lightbox-overlay{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.92);cursor:zoom-out;align-items:center;justify-content:center;padding:20px}
+.lightbox-overlay.active{display:flex}
+.lightbox-overlay img{max-width:95vw;max-height:90vh;object-fit:contain;border:2px solid var(--gold);border-radius:4px;box-shadow:0 0 40px rgba(200,168,78,0.3)}
+.lightbox-close{position:fixed;top:16px;right:16px;font-size:28px;color:var(--parchment);background:rgba(0,0,0,0.6);border:1px solid var(--gold);cursor:pointer;z-index:3001;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.lightbox-close:hover{color:var(--gold);background:rgba(0,0,0,0.8)}
+.zoomable-img{cursor:zoom-in;border:2px solid var(--gold);border-radius:4px;transition:all 0.3s;max-width:100%;display:block;margin:0 auto}
+.zoomable-img:hover{border-color:var(--gold-light);box-shadow:0 0 12px rgba(200,168,78,0.4)}
+
+/* Ungame Overlay */
+.ungame-overlay{display:none;position:fixed;inset:0;z-index:2000;background:var(--parchment);color:#333;overflow-y:auto}
+.ungame-overlay.active{display:block}
+.ungame-content{max-width:750px;margin:0 auto;padding:30px 24px;font-family:var(--font-body);font-size:15px;line-height:1.7}
+.ungame-content h1{font-family:var(--font-medieval);font-size:28px;color:#333;margin-bottom:6px;border-bottom:2px solid #8b6914;padding-bottom:6px}
+.ungame-content h2{font-family:var(--font-medieval);font-size:22px;color:#555;margin:24px 0 8px;border-bottom:1px solid #ccc;padding-bottom:4px}
+.ungame-content h3{font-size:16px;font-weight:700;color:#444;margin:16px 0 6px}
+.ungame-content p{margin-bottom:10px;color:#444}
+.ungame-content ul,.ungame-content ol{padding-left:22px;margin-bottom:10px}
+.ungame-content li{margin-bottom:4px;color:#444}
+.ungame-content strong{color:#333}
+.ungame-close{display:inline-block;font-family:var(--font-body);font-size:14px;font-weight:600;color:#8b1a1a;background:#fff;border:2px solid #8b1a1a;padding:8px 16px;cursor:pointer;border-radius:4px;margin:6px 0 16px;min-height:44px}
+.ungame-close:hover{background:#fef0f0}
+
+/* Spacer utility */
+.gap-sm{gap:8px}
+.mb-sm{margin-bottom:8px}
+.mb-md{margin-bottom:12px}
+.flex-col{display:flex;flex-direction:column}
+.flex-1{flex:1;min-height:0}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .two-col,.three-col,.houses-grid,.faq-grid,.library-shelf{grid-template-columns:1fr}
+  .legend-box .legend-grid{grid-template-columns:1fr 1fr}
+  .screen{padding:42px 16px 14px}
+  .dialogue-box-with-char{flex-direction:column;align-items:center}
+  .tyrion-quote{flex-direction:column;align-items:center;text-align:center}
+  .hand-card{flex-direction:column;text-align:center}
+  .chapter-title-card::before,.chapter-title-card::after{display:none}
+  body{font-size:14px}
+  .parchment-panel h3,.decree h3,.quiz-panel h3,.laws-panel h3{font-size:15px}
+  .parchment-panel p,.parchment-panel li,.decree p,.decree li,.quiz-panel p{font-size:13px}
+  .chapter-title{font-size:22px}
+  .main-title{font-size:40px}
+  .nav-btn{font-size:8px;padding:8px 14px}
+  .cta-btn{font-size:9px;padding:8px 18px}
+  .decree{padding:10px 12px}
+  .tome{padding:14px}
+  .tome h4{font-size:16px}
+  .faq-question{font-size:12px;padding:6px 8px}
+  .faq-answer-inner{font-size:12px;padding:0 8px 6px}
+  .proclamation{padding:10px 14px}
+  .proclamation li{font-size:13px}
+  .legend-item{font-size:11px}
+  .ungame-content{padding:20px 16px}
+  .ungame-content h1{font-size:22px}
+  .ungame-content h2{font-size:18px}
+  .deck-link{font-size:9px;padding:10px 18px}
+  .house-card{padding:8px}
+}
+@media(max-width:500px){
+  .legend-box .legend-grid{grid-template-columns:1fr}
+  .screen{padding:40px 10px 10px}
+  .houses-grid{gap:6px}
+  .house-card{padding:6px}
+  .house-name{font-size:15px}
+  .house-sigil{font-size:22px}
+  .roster-names{font-size:11px}
+  .treasury-meter{padding:6px}
+  .nav-row{padding-top:8px}
+  .dialogue-box{padding:10px 12px}
+  .dialogue-box p{font-size:13px}
+  .deck-link{font-size:8px;padding:8px 14px}
+}
+
+/* Embers */
+.ember-container{position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden}
+.ember{position:absolute;background:var(--gold);border-radius:50%;opacity:0;animation:emberFloat linear infinite;box-shadow:0 0 6px rgba(255,150,0,0.6)}
+@keyframes emberFloat{0%{opacity:0;transform:translateY(0) translateX(0) scale(1)}10%{opacity:0.8}50%{opacity:0.6;transform:translateY(-50vh) translateX(30px) scale(0.8)}90%{opacity:0.2}100%{opacity:0;transform:translateY(-100vh) translateX(-15px) scale(0.3)}}
+
+/* Dragon */
+.pixel-dragon{position:fixed;z-index:9998;pointer-events:none;width:80px;height:50px;top:-80px;left:-80px;filter:drop-shadow(0 0 10px rgba(255,100,0,0.6))}
+.pixel-dragon.flying{animation:dragonFly 3s ease-in-out forwards}
+@keyframes dragonFly{0%{top:80vh;left:-100px;transform:rotate(-5deg)}25%{top:35vh;left:25vw;transform:rotate(8deg)}50%{top:15vh;left:55vw;transform:rotate(-5deg)}75%{top:30vh;left:80vw;transform:rotate(6deg)}100%{top:-80px;left:110vw;transform:rotate(-10deg)}}
+
+/* Stars bg */
+.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:5}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle ease-in-out infinite;box-shadow:0 0 3px rgba(255,255,255,0.4)}
+@keyframes twinkle{0%,100%{opacity:0.1}50%{opacity:0.7}}
+
+/* Torches */
+.torch{position:absolute;pointer-events:none}
+.torch-flame{width:8px;height:16px;background:radial-gradient(ellipse at 50% 100%,#ff6600,#ff9900 40%,#ffcc00 70%,transparent);border-radius:50% 50% 20% 20%;animation:torchFlicker 0.4s ease-in-out infinite alternate;filter:blur(1px)}
+@keyframes torchFlicker{0%{transform:scaleY(1) scaleX(1);opacity:0.85}33%{transform:scaleY(1.15) scaleX(0.85);opacity:1}66%{transform:scaleY(0.9) scaleX(1.1);opacity:0.9}100%{transform:scaleY(1.05) scaleX(0.95);opacity:0.95}}
+.torch-base{width:4px;height:8px;background:linear-gradient(#5a3a1a,#3a2010);margin:0 auto;border-radius:1px}
+.chapter-title-card{overflow:visible;position:relative}
+.chapter-title-card .torch{top:-22px}
+.chapter-title-card .torch.left-torch{left:32px}
+.chapter-title-card .torch.right-torch{right:32px}
+
+/* Tyrion float companion */
+.companion-tyrion{position:fixed;bottom:12px;left:12px;z-index:998;display:none;cursor:pointer;transition:transform 0.3s}
+.companion-tyrion.visible{display:block}
+.companion-tyrion:hover{transform:scale(1.2)}
+.tyrion-float{animation:tyrionFloat 3s ease-in-out infinite}
+@keyframes tyrionFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* Tyrion speech bubble (easter egg) */
+.tyrion-speech-bubble{
+  position:fixed;bottom:56px;left:12px;z-index:999;
+  max-width:280px;padding:10px 14px;
+  background:linear-gradient(135deg,#2a2218,#1e1a14);
+  border:2px solid var(--gold);border-radius:8px 8px 8px 0;
+  font-family:var(--font-medieval);font-size:14px;color:var(--gold-light);
+  font-style:italic;line-height:1.5;
+  box-shadow:0 4px 20px rgba(0,0,0,0.6),0 0 12px rgba(200,168,78,0.2);
+  opacity:0;transform:translateY(10px) scale(0.9);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+  pointer-events:none;
+}
+.tyrion-speech-bubble.show{opacity:1;transform:translateY(0) scale(1)}
+.tyrion-speech-bubble::after{
+  content:'';position:absolute;bottom:-8px;left:12px;
+  border-left:8px solid transparent;border-right:8px solid transparent;
+  border-top:8px solid var(--gold);
+}
+
+/* Gold shimmer on deck links */
+.deck-link{position:relative;overflow:hidden}
+.deck-link::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);transform:translateX(-100%)}
+.deck-link:hover::after{animation:shimmer 0.8s ease forwards}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* Quiz wrong shake */
+.quiz-shake{animation:quizShake 0.4s ease}
+@keyframes quizShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* ===== PER-SCREEN THEMED BACKGROUNDS ===== */
+
+/* King's Landing — warm fire, crimson & orange */
+#start-screen{
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(180,60,20,0.4) 0%,transparent 50%),
+    radial-gradient(ellipse at 20% 80%,rgba(255,120,0,0.25) 0%,transparent 40%),
+    radial-gradient(ellipse at 80% 80%,rgba(255,120,0,0.25) 0%,transparent 40%),
+    radial-gradient(ellipse at 50% 30%,#1a1510,#0d0806) !important;
+}
+#start-screen .parchment-panel,#start-screen .dialogue-box,#start-screen .legend-box{
+  border-color:rgba(200,100,30,0.4);
+}
+
+/* The Red Keep — deep crimson red, brooding */
+#level-1{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(139,26,26,0.5) 0%,transparent 50%),
+    radial-gradient(ellipse at 0% 100%,rgba(100,20,20,0.35) 0%,transparent 40%),
+    radial-gradient(ellipse at 100% 100%,rgba(100,20,20,0.35) 0%,transparent 40%),
+    linear-gradient(180deg,#12080a,#0d0606);
+}
+#level-1 .parchment-panel{background:linear-gradient(135deg,#2a1618,#1e1012);border-color:rgba(180,40,40,0.3)}
+#level-1 .quiz-panel{background:linear-gradient(135deg,#2a1620,#1e1018);border-color:rgba(180,60,80,0.4)}
+#level-1 .chapter-title{color:#e05050}
+#level-1 .chapter-title-card{border-color:rgba(200,60,60,0.5)}
+
+/* Casterly Rock — rich gold, warm amber wealth */
+#level-2{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(200,168,78,0.3) 0%,transparent 45%),
+    radial-gradient(ellipse at 0% 50%,rgba(180,140,40,0.2) 0%,transparent 35%),
+    radial-gradient(ellipse at 100% 50%,rgba(180,140,40,0.2) 0%,transparent 35%),
+    radial-gradient(ellipse at 50% 100%,rgba(120,80,10,0.25) 0%,transparent 40%),
+    linear-gradient(180deg,#14120a,#0d0c06);
+}
+#level-2 .decree{border-color:rgba(200,168,78,0.5);background:linear-gradient(135deg,#2a2618,#1e1c10)}
+#level-2 .chapter-title-card{border-color:rgba(200,168,78,0.6)}
+
+/* Winterfell — cold blue-grey, icy */
+#level-3{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(91,155,213,0.3) 0%,transparent 50%),
+    radial-gradient(ellipse at 0% 100%,rgba(60,100,160,0.2) 0%,transparent 40%),
+    radial-gradient(ellipse at 100% 100%,rgba(60,100,160,0.2) 0%,transparent 40%),
+    linear-gradient(180deg,#080c14,#060810);
+}
+#level-3 .parchment-panel{background:linear-gradient(135deg,#1a1e28,#12161e);border-color:rgba(91,155,213,0.25)}
+#level-3 .hand-card{border-color:rgba(91,155,213,0.35);background:linear-gradient(135deg,#1a1e28,#12161e)}
+#level-3 .house-card{border-color:rgba(91,155,213,0.3);background:linear-gradient(180deg,#1a1e28,#12161e)}
+#level-3 .laws-panel{border-color:rgba(91,155,213,0.25);background:linear-gradient(180deg,#161a22,#10141a)}
+#level-3 .chapter-title{color:var(--ice-blue)}
+#level-3 .chapter-title-card{border-color:rgba(91,155,213,0.4)}
+
+/* The Citadel — warm amber-brown, candlelit library */
+#level-4{
+  background:
+    radial-gradient(ellipse at 30% 20%,rgba(200,168,78,0.25) 0%,transparent 40%),
+    radial-gradient(ellipse at 70% 80%,rgba(200,168,78,0.2) 0%,transparent 35%),
+    radial-gradient(ellipse at 50% 50%,rgba(60,40,15,0.8) 0%,transparent 60%),
+    linear-gradient(180deg,#12100a,#0a0806);
+}
+#level-4 .tome{border-color:rgba(200,168,78,0.5);background:linear-gradient(135deg,#2a2418,#1e1c10)}
+#level-4 .chapter-title-card{border-color:rgba(200,168,78,0.5)}
+
+/* The Wall — icy blue-black, freezing cold */
+#faq-screen{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(91,155,213,0.35) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 100%,rgba(60,120,200,0.25) 0%,transparent 40%),
+    radial-gradient(ellipse at 0% 50%,rgba(40,80,140,0.15) 0%,transparent 30%),
+    radial-gradient(ellipse at 100% 50%,rgba(40,80,140,0.15) 0%,transparent 30%),
+    linear-gradient(180deg,#060a14,#04060c);
+}
+#faq-screen .faq-item{background:linear-gradient(135deg,#141822,#0e1218);border-color:rgba(91,155,213,0.2)}
+#faq-screen .faq-item.open{border-color:rgba(91,155,213,0.5)}
+#faq-screen .faq-question:hover{color:var(--ice-blue)}
+#faq-screen .chapter-title{color:var(--ice-blue)}
+#faq-screen .chapter-title-card{border-color:rgba(91,155,213,0.5)}
+
+/* Dragonstone — volcanic green fire + gold celebration */
+#completion-screen{
+  background:
+    radial-gradient(ellipse at 50% 40%,rgba(200,168,78,0.35) 0%,transparent 40%),
+    radial-gradient(ellipse at 20% 100%,rgba(76,175,80,0.3) 0%,transparent 35%),
+    radial-gradient(ellipse at 80% 100%,rgba(76,175,80,0.3) 0%,transparent 35%),
+    radial-gradient(ellipse at 50% 0%,rgba(139,26,26,0.25) 0%,transparent 40%),
+    linear-gradient(180deg,#0d0a06,#060804);
+}
+#completion-screen .proclamation{border-color:rgba(76,175,80,0.4);background:linear-gradient(135deg,#1a2a1a,#101e10)}
+#completion-screen .chapter-title-card{border-color:rgba(76,175,80,0.5)}
+
+/* ===== SIDE WALL TORCHES ===== */
+.wall-decorations{position:fixed;inset:0;pointer-events:none;z-index:10;display:none}
+.wall-decorations.visible{display:block}
+.wall-torch-side{position:absolute;width:20px;pointer-events:none}
+.wall-torch-side .wt-flame{
+  width:14px;height:28px;margin:0 auto;
+  background:radial-gradient(ellipse at 50% 100%,#ff4400,#ff8800 40%,#ffcc00 70%,transparent);
+  border-radius:50% 50% 20% 20%;
+  animation:wallFlame 0.5s ease-in-out infinite alternate;
+  filter:blur(2px);
+}
+.wall-torch-side .wt-bracket{width:16px;height:6px;background:linear-gradient(#6a4a2a,#4a3018);margin:0 auto;border-radius:2px;box-shadow:0 2px 4px rgba(0,0,0,0.5)}
+.wall-torch-side .wt-glow{
+  position:absolute;width:120px;height:120px;top:-40px;left:-50px;
+  background:radial-gradient(circle,rgba(255,150,0,0.2),rgba(255,100,0,0.08) 40%,transparent 70%);
+  border-radius:50%;
+}
+@keyframes wallFlame{0%{transform:scaleY(1) scaleX(1);opacity:0.8}50%{transform:scaleY(1.2) scaleX(0.8);opacity:1}100%{transform:scaleY(0.85) scaleX(1.15);opacity:0.85}}
+
+/* Torch color variants per theme */
+.wall-decorations.ice .wt-flame{
+  background:radial-gradient(ellipse at 50% 100%,#2288cc,#44aaee 40%,#88ccff 70%,transparent);
+}
+.wall-decorations.ice .wt-glow{
+  background:radial-gradient(circle,rgba(91,155,213,0.25),rgba(60,120,200,0.1) 40%,transparent 70%);
+}
+
+/* ===== AMBIENT EDGE GLOWS ===== */
+.screen-glow{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+}
+.screen-glow.fire::before,.screen-glow.fire::after{
+  content:'';position:absolute;top:0;bottom:0;width:60px;
+  background:linear-gradient(90deg,rgba(255,100,0,0.12),transparent);
+}
+.screen-glow.fire::before{left:0}
+.screen-glow.fire::after{right:0;background:linear-gradient(270deg,rgba(255,100,0,0.12),transparent)}
+.screen-glow.ice::before,.screen-glow.ice::after{
+  content:'';position:absolute;top:0;bottom:0;width:60px;
+  background:linear-gradient(90deg,rgba(91,155,213,0.15),transparent);
+}
+.screen-glow.ice::before{left:0}
+.screen-glow.ice::after{right:0;background:linear-gradient(270deg,rgba(91,155,213,0.15),transparent)}
+.screen-glow.gold::before,.screen-glow.gold::after{
+  content:'';position:absolute;top:0;bottom:0;width:60px;
+  background:linear-gradient(90deg,rgba(200,168,78,0.1),transparent);
+}
+.screen-glow.gold::before{left:0}
+.screen-glow.gold::after{right:0;background:linear-gradient(270deg,rgba(200,168,78,0.1),transparent)}
+.screen-glow.green::before,.screen-glow.green::after{
+  content:'';position:absolute;top:0;bottom:0;width:60px;
+  background:linear-gradient(90deg,rgba(76,175,80,0.12),transparent);
+}
+.screen-glow.green::before{left:0}
+.screen-glow.green::after{right:0;background:linear-gradient(270deg,rgba(76,175,80,0.12),transparent)}
+
+/* ===== WHITE WALKER FROST EFFECT ===== */
+.frost-border{position:relative}
+.frost-border::after{
+  content:'';position:absolute;inset:-2px;
+  border:2px solid rgba(91,155,213,0.3);border-radius:6px;
+  box-shadow:0 0 12px rgba(91,155,213,0.15),inset 0 0 12px rgba(91,155,213,0.08);
+  pointer-events:none;animation:frostPulse 3s ease-in-out infinite;
+}
+@keyframes frostPulse{0%,100%{box-shadow:0 0 8px rgba(91,155,213,0.12),inset 0 0 8px rgba(91,155,213,0.06)}50%{box-shadow:0 0 18px rgba(91,155,213,0.25),inset 0 0 18px rgba(91,155,213,0.12)}}
+
+/* ===== SNOW / ICE PARTICLES ===== */
+.snow-container{position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden;display:none}
+.snow-container.active{display:block}
+.snowflake{position:absolute;background:rgba(220,235,255,0.8);border-radius:50%;animation:snowFall linear infinite;box-shadow:0 0 4px rgba(200,220,255,0.5)}
+@keyframes snowFall{0%{transform:translateY(-10px) translateX(0);opacity:0}10%{opacity:0.6}90%{opacity:0.3}100%{transform:translateY(100vh) translateX(40px);opacity:0}}
+
+/* ===== WILDFIRE (GREEN FIRE) ===== */
+.wildfire-bar{
+  position:fixed;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#4caf50,#66ff66,#4caf50,transparent);
+  opacity:0;pointer-events:none;z-index:5;
+  box-shadow:0 0 20px rgba(76,255,76,0.3),0 -8px 40px rgba(76,175,80,0.15);
+  transition:opacity 0.8s;
+}
+.wildfire-bar.active{opacity:0.7;animation:wildfireFlicker 0.3s ease-in-out infinite alternate}
+@keyframes wildfireFlicker{0%{opacity:0.5;height:3px}100%{opacity:0.8;height:5px}}
+
+/* ===== ZOMBIE HANDS ===== */
+.zombie-container{position:fixed;bottom:0;left:0;right:0;height:80px;pointer-events:none;z-index:10;overflow:hidden;display:none}
+.zombie-container.active{display:block}
+.zombie-hand{
+  position:absolute;bottom:-50px;width:28px;height:60px;
+  transition:transform 2s ease-out,opacity 1.5s;opacity:0;
+}
+.zombie-hand.risen{transform:translateY(-45px);opacity:0.6}
+.zombie-hand .zh-arm{width:8px;height:38px;background:linear-gradient(180deg,#5a6a5a,#3a4a3a);margin:0 auto;border-radius:2px}
+.zombie-hand .zh-fingers{display:flex;gap:2px;justify-content:center}
+.zombie-hand .zh-finger{width:4px;height:14px;background:#6a7a6a;border-radius:2px 2px 0 0}
+.zombie-hand .zh-glow{position:absolute;top:-10px;left:-15px;width:60px;height:40px;background:radial-gradient(ellipse,rgba(91,155,213,0.3),transparent);border-radius:50%}
+
+/* ===== DRAGON FIRE BREATH TRAIL ===== */
+.fire-trail{
+  position:fixed;pointer-events:none;z-index:9997;
+  width:6px;height:6px;
+  background:radial-gradient(circle,#ff6600,#ff9900,transparent);
+  border-radius:50%;opacity:0;
+  animation:fireTrailFade 0.5s ease-out forwards;
+}
+@keyframes fireTrailFade{0%{opacity:0.7;transform:scale(1)}100%{opacity:0;transform:scale(3)}}
+
+/* ===== THE WALL (ICE DIVIDER) ===== */
+.the-wall{
+  height:4px;margin:8px 0;position:relative;overflow:hidden;
+  background:linear-gradient(90deg,transparent 5%,rgba(91,155,213,0.25) 20%,rgba(150,200,255,0.4) 50%,rgba(91,155,213,0.25) 80%,transparent 95%);
+  border-radius:2px;box-shadow:0 0 10px rgba(91,155,213,0.15);
+}
+.the-wall::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:wallShimmer 3s linear infinite}
+@keyframes wallShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ===== DRAGONFIRE BURST (COMPLETION) ===== */
+.dragonfire-burst{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:400px;height:400px;pointer-events:none;z-index:9990;opacity:0;
+}
+.dragonfire-burst.active{animation:dragonfireBurst 2s ease-out forwards}
+@keyframes dragonfireBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(0.2)}15%{opacity:0.9}100%{opacity:0;transform:translate(-50%,-50%) scale(3)}}
+.dragonfire-burst-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,100,0,0.7),rgba(255,200,0,0.4) 30%,rgba(200,168,78,0.2) 50%,transparent 70%);
+  filter:blur(30px);
+}
+
+/* ===== SWORD DIVIDER ===== */
+.sword-divider{display:flex;align-items:center;gap:6px;margin:6px 0;opacity:0.4}
+.sword-divider::before,.sword-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.sword-divider span{font-size:12px;color:var(--gold)}
+
+/* ===== WIND/DUST PARTICLES FOR LIBRARY ===== */
+.dust-container{position:fixed;inset:0;pointer-events:none;z-index:10;overflow:hidden;display:none}
+.dust-container.active{display:block}
+.dust-mote{
+  position:absolute;
+  background:rgba(200,168,78,0.6);border-radius:50%;
+  animation:dustDrift linear infinite;
+  box-shadow:0 0 4px rgba(200,168,78,0.3);
+}
+@keyframes dustDrift{
+  0%{transform:translate(0,0);opacity:0}
+  20%{opacity:0.5}
+  80%{opacity:0.3}
+  100%{transform:translate(60px,-80px);opacity:0}
+}
+
+/* ===== HOUSE CARD BANNER FLAGS ===== */
+.house-card{position:relative;overflow:visible}
+.house-card::before{
+  content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:20px;height:6px;background:var(--gold);
+  border-radius:2px 2px 0 0;box-shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* ===== ANIMATED BACKGROUND SILHOUETTES ===== */
+.bg-silhouette{position:absolute;pointer-events:none;opacity:0.03;z-index:0}
+.bg-castle{
+  width:200px;height:150px;
+  background:
+    linear-gradient(0deg,#fff 0%,#fff 40%,transparent 40%) 20px 0/20px 100% no-repeat,
+    linear-gradient(0deg,#fff 0%,#fff 60%,transparent 60%) 50px 0/15px 100% no-repeat,
+    linear-gradient(0deg,#fff 0%,#fff 50%,transparent 50%) 80px 0/25px 100% no-repeat,
+    linear-gradient(0deg,#fff 0%,#fff 35%,transparent 35%) 120px 0/18px 100% no-repeat,
+    linear-gradient(0deg,#fff 0%,#fff 55%,transparent 55%) 150px 0/20px 100% no-repeat,
+    linear-gradient(0deg,#fff 0%,#fff 25%,transparent 25%);
+}
+
+/* Screen-specific silhouette positioning */
+.screen{position:relative}
+</style>
+</head>
+<body>
+
+<!-- Raven -->
+<div class="pixel-raven" id="raven">
+  <svg viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+    <rect x="16" y="8" width="10" height="8" fill="#222"/><rect x="14" y="10" width="14" height="6" fill="#333"/>
+    <rect x="26" y="6" width="8" height="4" fill="#333"/><rect x="6" y="6" width="8" height="4" fill="#333"/>
+    <rect x="24" y="14" width="4" height="2" fill="#333"/><rect x="26" y="16" width="3" height="2" fill="#555"/>
+    <rect x="22" y="10" width="2" height="2" fill="#ff6"/>
+  </svg>
+</div>
+
+<!-- Dragon -->
+<div class="pixel-dragon" id="dragon">
+  <svg viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+    <rect x="30" y="20" width="20" height="12" fill="#2a6e2a"/><rect x="28" y="22" width="24" height="8" fill="#3a8e3a"/>
+    <rect x="50" y="16" width="14" height="10" fill="#3a8e3a"/><rect x="52" y="14" width="4" height="4" fill="#2a6e2a"/><rect x="58" y="14" width="4" height="4" fill="#2a6e2a"/>
+    <rect x="56" y="18" width="3" height="3" fill="#ff0"/><rect x="57" y="19" width="1" height="1" fill="#000"/>
+    <rect x="64" y="20" width="6" height="3" fill="#ff6600"/><rect x="68" y="19" width="4" height="2" fill="#ff9900"/><rect x="70" y="18" width="3" height="1" fill="#ffcc00"/>
+    <rect x="32" y="8" width="16" height="4" fill="#2a6e2a"/><rect x="34" y="4" width="12" height="6" fill="#1a5e1a"/><rect x="36" y="2" width="8" height="4" fill="#2a6e2a"/><rect x="30" y="12" width="20" height="4" fill="#3a8e3a"/>
+    <rect x="16" y="24" width="14" height="4" fill="#3a8e3a"/><rect x="10" y="22" width="8" height="4" fill="#2a6e2a"/><rect x="6" y="20" width="6" height="4" fill="#3a8e3a"/><rect x="4" y="18" width="4" height="4" fill="#2a6e2a"/>
+    <rect x="34" y="32" width="4" height="6" fill="#2a6e2a"/><rect x="44" y="32" width="4" height="6" fill="#2a6e2a"/>
+    <rect x="32" y="36" width="8" height="2" fill="#1a5e1a"/><rect x="42" y="36" width="8" height="2" fill="#1a5e1a"/>
+  </svg>
+</div>
+
+<!-- Background elements -->
+<div class="ember-container" id="ember-container"></div>
+<div class="stars-bg" id="stars-bg"></div>
+
+<!-- Companion Tyrion -->
+<div class="companion-tyrion" id="companion-tyrion" title="Tyrion is with you!">
+  <div class="pixel-tyrion tyrion-float">
+    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+      <rect x="5" y="1" width="6" height="3" fill="#c8a84e"/><rect x="4" y="2" width="1" height="3" fill="#c8a84e"/><rect x="11" y="2" width="1" height="3" fill="#c8a84e"/>
+      <rect x="5" y="4" width="6" height="4" fill="#e8b88a"/><rect x="6" y="5" width="1" height="1" fill="#333"/><rect x="9" y="5" width="1" height="1" fill="#333"/><rect x="7" y="7" width="2" height="1" fill="#c77"/>
+      <rect x="4" y="8" width="8" height="5" fill="#8b1a1a"/><rect x="5" y="8" width="6" height="1" fill="#a52a2a"/><rect x="4" y="11" width="8" height="1" fill="#c8a84e"/>
+      <rect x="5" y="13" width="2" height="2" fill="#4a3728"/><rect x="9" y="13" width="2" height="2" fill="#4a3728"/>
+      <rect x="12" y="9" width="2" height="1" fill="#c8a84e"/><rect x="12" y="8" width="3" height="1" fill="#c8a84e"/><rect x="13" y="7" width="1" height="1" fill="#722"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Tyrion Speech Bubble (Easter Egg) -->
+<div class="tyrion-speech-bubble" id="tyrion-speech-bubble"></div>
+
+<!-- Progress Bar -->
+<div class="progress-bar-container" id="progress-bar">
+  <span class="progress-label" id="progress-label">CH 0/4</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="castle-towers">
+    <div class="castle-tower" style="height:10px"></div>
+    <div class="castle-tower" style="height:14px"></div>
+    <div class="castle-tower" style="height:18px"></div>
+    <div class="castle-tower" style="height:12px"></div>
+  </div>
+  <button class="chapter-select-btn" onclick="toggleChapterMenu()">CHAPTERS</button>
+</div>
+<div class="chapter-menu" id="chapter-menu">
+  <button class="chapter-menu-item" onclick="goToScreen('start-screen')">Start Screen</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-1')">Ch I &mdash; Ravens from the Capital</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-2')">Ch II &mdash; Your Sworn Duties</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-3')">Ch III &mdash; The Small Council</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-4')">Ch IV &mdash; The Forbidden Library</button>
+  <button class="chapter-menu-item" onclick="goToScreen('faq-screen')">FAQs</button>
+  <button class="chapter-menu-item" onclick="goToScreen('completion-screen')">Completion</button>
+</div>
+<button class="ungame-btn" id="ungame-btn" onclick="openUngame()">&#128220; Just the facts</button>
+
+<!-- ====== SLIDER ====== -->
+<div class="slider" id="slider">
+
+<!-- START SCREEN -->
+<div class="screen" id="start-screen">
+  <div class="screen-glow fire"></div>
+  <div class="screen-inner" style="align-items:center;justify-content:center;position:relative;z-index:1">
+    <div class="title-area">
+      <div style="font-size:60px;margin-bottom:8px">🦁</div>
+      <div class="main-title">TYRION</div>
+      <div class="subtitle">Domains of Ice and Fire</div>
+      <div style="font-family:var(--font-pixel);font-size:6px;color:var(--crimson-light);letter-spacing:2px;margin-bottom:2px;opacity:0.7">📍 KING'S LANDING</div>
+      <div class="tagline">"In the game of media, you win or you overlap."</div>
+      <div class="time-estimate">~10 MIN TO COMPLETE</div>
+    </div>
+
+    <div class="dialogue-box-with-char mb-md">
+      <div class="pixel-tyrion">
+        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+          <rect x="5" y="1" width="6" height="3" fill="#c8a84e"/><rect x="4" y="2" width="1" height="3" fill="#c8a84e"/><rect x="11" y="2" width="1" height="3" fill="#c8a84e"/>
+          <rect x="5" y="4" width="6" height="4" fill="#e8b88a"/><rect x="6" y="5" width="1" height="1" fill="#333"/><rect x="9" y="5" width="1" height="1" fill="#333"/><rect x="7" y="7" width="2" height="1" fill="#c77"/>
+          <rect x="4" y="8" width="8" height="5" fill="#8b1a1a"/><rect x="5" y="8" width="6" height="1" fill="#a52a2a"/><rect x="4" y="11" width="8" height="1" fill="#c8a84e"/>
+          <rect x="5" y="13" width="2" height="2" fill="#4a3728"/><rect x="9" y="13" width="2" height="2" fill="#4a3728"/>
+          <rect x="12" y="9" width="2" height="1" fill="#c8a84e"/><rect x="12" y="8" width="3" height="1" fill="#c8a84e"/><rect x="13" y="7" width="1" height="1" fill="#722"/>
+        </svg>
+      </div>
+      <div class="dialogue-box">
+        <span class="speaker">TYRION</span>
+        <p>Welcome, brave MFGer! 👋 Google's Product Areas are overlapping more than ever. Tyrion is the process that brings order to the chaos.</p>
+      </div>
+    </div>
+
+    <div class="legend-box">
+      <h3>REALM GLOSSARY</h3>
+      <div class="legend-grid">
+        <div class="legend-item">🏰 <span class="got-term">Great Houses</span> <span class="real-term">= Google's PAs</span></div>
+        <div class="legend-item">🗺️ <span class="got-term">Domains</span> <span class="real-term">= Audiences &amp; messaging</span></div>
+        <div class="legend-item">🌍 <span class="got-term">The Realm</span> <span class="real-term">= Google media landscape</span></div>
+        <div class="legend-item">👑 <span class="got-term">The Hand</span> <span class="real-term">= Global coordinator (Ed)</span></div>
+        <div class="legend-item">⚔️ <span class="got-term">Wardens</span> <span class="real-term">= Regional leads</span></div>
+        <div class="legend-item">📜 <span class="got-term">The Map</span> <span class="real-term">= The Tyrion deck</span></div>
+      </div>
+    </div>
+
+    <button class="cta-btn" onclick="startQuest()">BEGIN YOUR QUEST</button>
+  </div>
+</div>
+
+<!-- LEVEL 1 -->
+<div class="screen" id="level-1">
+  <div class="screen-glow fire"></div>
+  <div class="screen-inner" style="position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 1 OF 4</span>
+      <div class="chapter-title">Ravens from the Capital</div>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🏰 THE RED KEEP</div>
+    </div>
+
+    <div class="two-col mb-sm" style="flex:1;min-height:0">
+      <!-- Left column -->
+      <div class="flex-col gap-sm">
+        <div class="dialogue-box">
+          <span class="speaker">TYRION</span>
+          <p>🔔 Big changes are coming to how MFG does media. Here's what you need to know.</p>
+        </div>
+        <div class="parchment-panel">
+          <h3>1. 📢 What's Changing</h3>
+          <div class="got-frame">"A new Hand has arrived at court..."</div>
+          <p>Michael Bailey is changing how Media Lab works. Regional leads (Carrie, Emily, Sylvie) are rolling out these changes.</p>
+        </div>
+        <div class="parchment-panel">
+          <h3>2. ⚠️ The Problem</h3>
+          <div class="got-frame">"The Great Houses have begun encroaching on each other's domains..."</div>
+          <p>Google's Product Areas often overlap in audiences, partnerships, and messaging &mdash; usually by accident. Gemini is making this worse.</p>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="flex-col gap-sm">
+        <div class="parchment-panel">
+          <h3>3. 🛡️ The Solution: Tyrion</h3>
+          <div class="got-frame">"Tyrion is the realm's intelligence network &mdash; mapping every house's territory."</div>
+          <p>Tyrion is a new process that helps MFG see, manage and untangle overlapping PA's within regions, markets and across the world.</p>
+        </div>
+        <div class="parchment-panel">
+          <h3>4. 🎯 The Goal</h3>
+          <div class="got-frame">"When the map is complete, any knight in any kingdom can see the full realm."</div>
+          <p><strong>Anyone at MFG, anywhere in the world, can see what every PA is doing.</strong> That's it. Full visibility.</p>
+        </div>
+        <div class="quiz-panel">
+          <h3>5. ✅ Quick Check</h3>
+          <p><strong>What is Tyrion for?</strong></p>
+          <button class="quiz-option" onclick="checkQuiz(this, false)">A) To control what PAs can do</button>
+          <button class="quiz-option" onclick="checkQuiz(this, true)">B) To make PA overlaps visible to everyone</button>
+          <button class="quiz-option" onclick="checkQuiz(this, false)">C) To combine all PAs into one</button>
+          <div class="quiz-result pass">Correct! You got it. ✅</div>
+          <div class="quiz-result fail">The answer is <strong>B</strong> &mdash; Tyrion is about visibility, not control. Onward!</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px">
+      <div style="font-family:var(--font-medieval);font-size:15px;color:var(--gold);margin-bottom:8px">📊 USA Domains Chart <span style="font-size:12px;color:#aaa;font-family:var(--font-body)">(click to enlarge)</span></div>
+      <img class="zoomable-img" src="USA%20Domains.png" alt="USA PA Domains Chart showing overlap across Google, Gemini, Pixel, Chrome, YouTube, Android, and more" onclick="openLightbox(this.src)" style="max-width:100%;max-height:200px;object-fit:contain">
+    </div>
+
+    <div class="plain-box mb-sm">
+      <span class="plain-box-label">BOTTOM LINE</span>
+      <p>Tyrion shows where Google's Product Areas overlap so everyone can see the full picture.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('start-screen')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('level-2')">CONTINUE &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 2 -->
+<div class="screen" id="level-2">
+  <div class="screen-glow gold"></div>
+  <div class="screen-inner" style="position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 2 OF 4</span>
+      <div class="chapter-title">Your Sworn Duties</div>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🦁 CASTERLY ROCK</div>
+    </div>
+
+    <div class="two-col mb-sm" style="flex:1;min-height:0">
+      <!-- Left column -->
+      <div class="flex-col gap-sm">
+        <div class="decree">
+          <h3>1. 📝 Update the Tyrion Deck</h3>
+          <p style="font-family:var(--font-pixel);font-size:7px;color:var(--gold);margin-bottom:6px">YOUR MAIN JOB</p>
+          <ul>
+            <li>📅 Update your slides when decisions are made &mdash; <strong>at least once a month</strong>.</li>
+            <li>🔄 Keep your region and markets up to date. Leave a comment when you change a slide.</li>
+            <li>⭐ When ML/PMM signs off, mark it with an <strong>asterisk *</strong> to show it's final.</li>
+          </ul>
+          <div class="treasury-meter">
+            <h4>INVESTMENT SCALE</h4>
+            <div class="treasury-bar">
+              <div class="treasury-coins">
+                <span class="coin"></span><span class="coin"></span><span class="coin"></span>
+                <span class="coin"></span><span class="coin"></span><span class="coin"></span>
+              </div>
+            </div>
+            <div class="treasury-labels"><span>Light</span><span>Heavy</span></div>
+          </div>
+          <div style="text-align:center;margin-top:6px">
+            <a class="deck-link" href="https://docs.google.com/presentation/d/1u_k01yV8D2fdEM_8IEZxZjre5iAEnlI9Gpw-xJSlNy4/edit?slide=id.g3cabef05669_4_4#slide=id.g3cabef05669_4_4" target="_blank" rel="noopener">📜 OPEN TYRION DECK</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="flex-col gap-sm">
+        <div class="decree">
+          <h3>2. 📊 Use Tyrion in Meetings &amp; Decks</h3>
+          <p style="font-family:var(--font-pixel);font-size:7px;color:var(--gold);margin-bottom:6px">MAKE IT PART OF YOUR WORKFLOW</p>
+          <div class="got-frame">"Consult the map before marching to war."</div>
+          <ul>
+            <li>🔍 Check Tyrion when building strategy and media plans.</li>
+            <li>💼 In client meetings, put it in the appendix. Just make sure clients know about it.</li>
+            <li>📎 Add a Tyrion section to all major PA decks.</li>
+          </ul>
+        </div>
+        <div class="tyrion-quote">
+          <div class="pixel-tyrion sm">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+              <rect x="5" y="1" width="6" height="3" fill="#c8a84e"/><rect x="4" y="2" width="1" height="3" fill="#c8a84e"/><rect x="11" y="2" width="1" height="3" fill="#c8a84e"/>
+              <rect x="5" y="4" width="6" height="4" fill="#e8b88a"/><rect x="6" y="5" width="1" height="1" fill="#333"/><rect x="9" y="5" width="1" height="1" fill="#333"/><rect x="7" y="7" width="2" height="1" fill="#c77"/>
+              <rect x="4" y="8" width="8" height="5" fill="#8b1a1a"/><rect x="5" y="8" width="6" height="1" fill="#a52a2a"/><rect x="4" y="11" width="8" height="1" fill="#c8a84e"/>
+              <rect x="5" y="13" width="2" height="2" fill="#4a3728"/><rect x="9" y="13" width="2" height="2" fill="#4a3728"/>
+              <rect x="12" y="9" width="2" height="1" fill="#c8a84e"/><rect x="12" y="8" width="3" height="1" fill="#c8a84e"/><rect x="13" y="7" width="1" height="1" fill="#722"/>
+            </svg>
+          </div>
+          <blockquote>"The goal of Tyrion is VISIBILITY. NOT policing Google."</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="plain-box mb-sm">
+      <span class="plain-box-label">BOTTOM LINE</span>
+      <p>You have two jobs: <strong>(1)</strong> Update the Tyrion deck at least monthly. <strong>(2)</strong> Include Tyrion in your PA meetings and decks. The goal is visibility, not policing.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('level-1')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('level-3')">CONTINUE &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 3 -->
+<div class="screen" id="level-3">
+  <div class="screen-glow ice"></div>
+  <div class="screen-inner" style="position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 3 OF 4</span>
+      <div class="chapter-title">The Small Council</div>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🐺 WINTERFELL</div>
+    </div>
+
+    <div class="hand-card mb-sm">
+      <div class="hand-icon">👑</div>
+      <div>
+        <h3>1. 👑 Global Lead: Ed</h3>
+        <p>Ed runs Tyrion across all regions. <span class="got-quote">"I'll be watching. Everywhere."</span></p>
+      </div>
+    </div>
+
+    <div style="font-family:var(--font-medieval);font-size:17px;color:var(--gold);margin-bottom:6px;text-align:center">2. 🏰 Regional Teams</div>
+
+    <div class="houses-grid mb-sm">
+      <div class="house-card">
+        <span class="house-sigil">🦅</span>
+        <div class="house-name">NA</div>
+        <div class="house-roster" style="display:block">
+          <div class="roster-section">
+            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-names"><strong>Erica / Mindy</strong></div>
+          </div>
+          <div class="roster-section">
+            <div class="roster-label">TEAM</div>
+            <div class="roster-names">Kimberly, Sarah, Theresa, Rachel</div>
+          </div>
+        </div>
+      </div>
+      <div class="house-card">
+        <span class="house-sigil">🐓</span>
+        <div class="house-name">EMEA</div>
+        <div class="house-roster" style="display:block">
+          <div class="roster-section">
+            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-names"><strong>Jo P / Rosanna</strong></div>
+          </div>
+          <div class="roster-section">
+            <div class="roster-label">TEAM</div>
+            <div class="roster-names">Grant, Regional Investment Lead</div>
+          </div>
+        </div>
+      </div>
+      <div class="house-card">
+        <span class="house-sigil">🐉</span>
+        <div class="house-name">APAC</div>
+        <div class="house-roster" style="display:block">
+          <div class="roster-section">
+            <div class="roster-label">⚔ LEADS</div>
+            <div class="roster-names"><strong>Kenward / Jamarr</strong></div>
+          </div>
+          <div class="roster-section">
+            <div class="roster-label">TEAM</div>
+            <div class="roster-names">Karl, Regional Investment Lead</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="laws-panel mb-sm">
+      <h3>3. 📋 How It Works</h3>
+      <ol>
+        <li>💬 Ed sets up a group chat with the lead strategist, planner, and CS in each region.</li>
+        <li>🔄 Each region updates Tyrion <strong>at least once a month</strong>.</li>
+        <li>🤝 Ed runs <strong>one</strong> kick-off meeting with all regional leads.</li>
+        <li>👤 For follow-ups, only send 1&ndash;2 people. Keep it lean.</li>
+      </ol>
+    </div>
+
+    <div class="plain-box mb-sm">
+      <span class="plain-box-label">BOTTOM LINE</span>
+      <p>Ed coordinates globally. Regional leads own their updates. Keep it monthly. Keep meetings small.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('level-2')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('level-4')">CONTINUE &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL 4 -->
+<div class="screen" id="level-4">
+  <div class="screen-glow gold"></div>
+  <div class="screen-inner" style="justify-content:center;position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 4 OF 4 &mdash; BONUS</span>
+      <div class="chapter-title">The Forbidden Library</div>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">📜 THE CITADEL, OLDTOWN</div>
+    </div>
+
+    <div class="dialogue-box mb-md">
+      <span class="speaker">MAESTER</span>
+      <p>📚 Bonus resources for those who want to dig deeper.</p>
+    </div>
+
+    <div class="library-shelf mb-sm">
+      <div class="tome">
+        <span class="tome-icon">📄</span>
+        <h4>1. The Original Proposal</h4>
+        <p>The deck that pitched the idea of domains to Michael and Carrie.</p>
+        <a class="deck-link" href="https://docs.google.com/presentation/d/1IpOTQEZ9f3yZnBiPiOzP5xhBleWAN3kaQNfJCAZ5PAw/edit?slide=id.g284072b41e1_0_1721#slide=id.g284072b41e1_0_1721" target="_blank" rel="noopener">📜 OPEN PETITION DECK</a>
+      </div>
+      <div class="tome">
+        <span class="tome-icon">🗾</span>
+        <h4>2. Japan Planning Example</h4>
+        <p>How Japan sorted out PA domains in their annual planning &mdash; a real-world example.</p>
+        <a class="deck-link" href="https://docs.google.com/presentation/d/1eNCBGslblRU9SRMSNQlKFadzntub72Mo4xbygVaXXck/edit?slide=id.g3be4aba2c55_0_1817#slide=id.g3be4aba2c55_0_1817" target="_blank" rel="noopener">📜 OPEN JAPAN PLANNING</a>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('level-3')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('faq-screen')">CONTINUE &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="screen" id="faq-screen">
+  <div class="screen-glow ice"></div>
+  <div class="screen-inner" style="position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 5</span>
+      <div class="chapter-title">FAQs</div>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--ice-blue);margin-top:3px;letter-spacing:1px">🧊 THE WALL &mdash; CASTLE BLACK</div>
+    </div>
+
+    <div class="faq-grid mb-sm">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>❓ What is a "domain" in Tyrion?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">A domain is a specific audience, partnership, or messaging space that a PA works in within a market. Tyrion maps these out so everyone can spot overlaps.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>📅 How often do I update the deck?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">At least once a month. Also update whenever a big PA strategy decision is made. Leave a comment on your slide when you change it.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>🟢 What does the green shading mean?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Lighter green = lighter investment. Darker green = heavier investment. Two PAs can share a domain &mdash; the shading shows who's spending more.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>💼 Do I bring up Tyrion in every client meeting?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No. It can live in the appendix. Just make clients aware it exists. For major PA decks, include it as its own section.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>📞 Who do I contact with questions?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Reach out to Ed (global) or your regional leads. NA: Erica/Mindy. EMEA: Jo P/Rosanna. APAC: Kenward/Jamarr.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>🚫 Is Tyrion meant to restrict PAs?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No. Tyrion is about <strong>visibility</strong>, not policing. It helps make sure overlaps are intentional, not accidental.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>🤝 What if two PAs share a domain?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">That's fine! Tyrion just makes the overlap visible. Green shading shows who's investing more. The goal is informed overlap, not zero overlap.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>🤖 How does Gemini factor in?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Gemini touches many PAs at once, which creates more overlaps. That's exactly why Tyrion's visibility is so important right now.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>⭐ What does the asterisk (*) mean?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">When ML/PMM approves a direction, mark it with an asterisk (*). This means it's a final decision, not a draft.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>🗺️ Where do I start with my region?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Open the Tyrion deck and find your region's slides. If they're empty, that's OK &mdash; you're building the map from scratch. Talk to your regional lead to get started.</div></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding-top:8px">
+      <a class="deck-link" href="https://chat.google.com/room/AAQA7utI8lI?cls=7" target="_blank" rel="noopener" style="font-size:11px;padding:14px 28px">💬 QUESTIONS? PUT IT IN THE GROUP CHAT</a>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('level-4')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('completion-screen')">COMPLETE TRAINING &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION -->
+<div class="screen" id="completion-screen">
+  <div class="screen-glow green"></div>
+  <div class="screen-inner" style="text-align:center;justify-content:center;align-items:center;position:relative;z-index:1">
+    <div class="celebration">
+      <div class="fireworks" id="fireworks-container"></div>
+      <div class="badge">🦁</div>
+      <div class="completion-title">You Have Served the Realm</div>
+      <p style="color:var(--gold-light);font-family:var(--font-medieval);font-size:16px;margin:4px 0 4px">Knight of the Tyrion Order</p>
+      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--crimson-light);letter-spacing:1px;margin-bottom:8px;opacity:0.7">🐲 DRAGONSTONE</div>
+    </div>
+
+    <div class="dialogue-box-with-char mb-md" style="justify-content:center;max-width:600px">
+      <div class="pixel-tyrion sm">
+        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated">
+          <rect x="5" y="1" width="6" height="3" fill="#c8a84e"/><rect x="4" y="2" width="1" height="3" fill="#c8a84e"/><rect x="11" y="2" width="1" height="3" fill="#c8a84e"/>
+          <rect x="5" y="4" width="6" height="4" fill="#e8b88a"/><rect x="6" y="5" width="1" height="1" fill="#333"/><rect x="9" y="5" width="1" height="1" fill="#333"/><rect x="7" y="7" width="2" height="1" fill="#c77"/>
+          <rect x="4" y="8" width="8" height="5" fill="#8b1a1a"/><rect x="5" y="8" width="6" height="1" fill="#a52a2a"/><rect x="4" y="11" width="8" height="1" fill="#c8a84e"/>
+          <rect x="5" y="13" width="2" height="2" fill="#4a3728"/><rect x="9" y="13" width="2" height="2" fill="#4a3728"/>
+          <rect x="12" y="9" width="2" height="1" fill="#c8a84e"/><rect x="12" y="8" width="3" height="1" fill="#c8a84e"/><rect x="13" y="7" width="1" height="1" fill="#722"/>
+        </svg>
+      </div>
+      <div class="dialogue-box">
+        <span class="speaker">TYRION</span>
+        <p>That wasn't so bad, was it? Now go forth and bring visibility to the realm. 🎉</p>
+      </div>
+    </div>
+
+    <div class="proclamation" style="max-width:600px">
+      <h3>Key Takeaways</h3>
+      <ol>
+        <li>🔍 <strong>Tyrion = visibility into PA overlaps.</strong> <span class="got-flavor">The realm's map reveals all territories.</span></li>
+        <li>📝 <strong>Update the deck monthly + include Tyrion in PA meetings.</strong> <span class="got-flavor">Guard the map. Attend the council.</span></li>
+        <li>👥 <strong>Know your regional team and who to contact.</strong> <span class="got-flavor">Know your house. Know your wardens.</span></li>
+      </ol>
+    </div>
+
+    <div style="margin-top:16px">
+      <button class="cta-btn" onclick="goToScreen('start-screen')">RETURN TO THE THRONE ROOM</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .slider -->
+
+<!-- SNOW PARTICLES (The Wall / FAQ) -->
+<div class="snow-container" id="snow-container"></div>
+
+<!-- DUST MOTES (Citadel / Library) -->
+<div class="dust-container" id="dust-container"></div>
+
+<!-- ZOMBIE HANDS (rising from bottom) -->
+<div class="zombie-container" id="zombie-container"></div>
+
+<!-- WILDFIRE BAR -->
+<div class="wildfire-bar" id="wildfire-bar"></div>
+
+<!-- DRAGONFIRE BURST (completion) -->
+<div class="dragonfire-burst" id="dragonfire-burst"><div class="dragonfire-burst-inner"></div></div>
+
+<!-- WALL TORCHES (side decorations) -->
+<div class="wall-decorations" id="wall-decorations"></div>
+
+<!-- LIGHTBOX OVERLAY -->
+<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <img src="" alt="Zoomed view">
+</div>
+
+<!-- UNGAME OVERLAY -->
+<div class="ungame-overlay" id="ungame-overlay">
+  <div class="ungame-content">
+    <button class="ungame-close" onclick="closeUngame()">&#9664; Return to Game</button>
+    <h1>Tyrion &mdash; Plain Text Version</h1>
+
+    <h2>What Is Tyrion?</h2>
+    <p>Tyrion is a new process for MFG. It creates visibility into how Google's Product Areas (PAs) overlap in audiences, partnerships, and messaging across markets.</p>
+    <p>Michael Bailey is changing how Media Lab works. Regional ML leads (Carrie, Emily, Sylvie) are rolling out these changes. Gemini is being integrated across many PAs, which makes overlaps worse.</p>
+    <p>Tyrion helps MFG see, manage, and untangle overlapping PAs within regions, markets, and across the world. It does this by mapping "domains" for each PA in each market, so anyone at MFG can see what every other PA is doing.</p>
+    <p><strong>Key idea:</strong> Tyrion = giving everyone visibility into PA domain overlaps.</p>
+
+    <h2>What You Need to Do</h2>
+    <h3>Task 1 &mdash; Keep the Tyrion Deck Updated</h3>
+    <ul>
+      <li>Update your slides when decisions are made (at least once a month). <a href="https://docs.google.com/presentation/d/1u_k01yV8D2fdEM_8IEZxZjre5iAEnlI9Gpw-xJSlNy4/edit?slide=id.g3cabef05669_4_4#slide=id.g3cabef05669_4_4" target="_blank" rel="noopener" style="color:#8b1a1a;font-weight:600">Open Tyrion Deck</a></li>
+      <li>Find your region and markets. Keep everything current. Leave a comment when you update a slide.</li>
+      <li>Slides should reflect MFG's recommendations. When ML/PMM signs off, mark with an asterisk (*) to show it's final.</li>
+      <li>Lighter green = lighter investment. Darker green = heavier investment. Two PAs can share a domain &mdash; the shading shows who's spending more.</li>
+    </ul>
+    <h3>Task 2 &mdash; Use Tyrion in PA Meetings &amp; Decks</h3>
+    <ul>
+      <li>Check Tyrion when building strategy and media plans. Look for overlaps that create problems or opportunities.</li>
+      <li>In client meetings, Tyrion can go in the appendix. Just make sure clients know about it.</li>
+      <li>Add a Tyrion section to all major PA decks.</li>
+    </ul>
+    <p><strong>Remember:</strong> The goal is VISIBILITY, not policing Google.</p>
+
+    <h2>Who Is Responsible</h2>
+    <p><strong>Global Coordinator:</strong> Ed</p>
+    <h3>Regional Teams:</h3>
+    <ul>
+      <li><strong>NA:</strong> Erica/Mindy (Leads) &middot; Team: Kimberly, Sarah, Theresa, Rachel</li>
+      <li><strong>EMEA:</strong> Jo P/Rosanna (Leads) &middot; Team: Grant, Regional Investment Lead</li>
+      <li><strong>APAC:</strong> Kenward/Jamarr (Leads) &middot; Team: Karl, Regional Investment Lead</li>
+    </ul>
+    <h3>How It Works:</h3>
+    <ul>
+      <li>Ed sets up a group chat with the lead strategist, planner, and CS in each region.</li>
+      <li>Each region updates Tyrion at least once a month.</li>
+      <li>Ed runs one kick-off meeting with all regional leads.</li>
+      <li>For follow-up meetings, only send 1&ndash;2 people. Keep it lean.</li>
+    </ul>
+
+    <h2>Reference Documents</h2>
+    <ol>
+      <li>The deck that pitched the idea of domains to Michael and Carrie. <a href="https://docs.google.com/presentation/d/1IpOTQEZ9f3yZnBiPiOzP5xhBleWAN3kaQNfJCAZ5PAw/edit?slide=id.g284072b41e1_0_1721#slide=id.g284072b41e1_0_1721" target="_blank" rel="noopener" style="color:#8b1a1a;font-weight:600">Open Petition Deck</a></li>
+      <li>How Japan sorted out PA domains in annual planning &mdash; a real example. <a href="https://docs.google.com/presentation/d/1eNCBGslblRU9SRMSNQlKFadzntub72Mo4xbygVaXXck/edit?slide=id.g3be4aba2c55_0_1817#slide=id.g3be4aba2c55_0_1817" target="_blank" rel="noopener" style="color:#8b1a1a;font-weight:600">Open Japan Planning</a></li>
+    </ol>
+    <button class="ungame-close" onclick="closeUngame()">&#9664; Return to Game</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const screenOrder = ['start-screen','level-1','level-2','level-3','level-4','faq-screen','completion-screen'];
+  const chapterScreens = ['level-1','level-2','level-3','level-4'];
+  let currentScreen = 'start-screen';
+  let currentIndex = 0;
+  let highestReached = 0;
+  const slider = document.getElementById('slider');
+
+  window.startQuest = function(){
+    flyRaven();
+    goToScreen('level-1');
+  };
+
+  window.goToScreen = function(id){
+    document.getElementById('chapter-menu').classList.remove('open');
+    const idx = screenOrder.indexOf(id);
+    if(idx === -1) return;
+    slider.style.transform = 'translateX(-' + (idx * 100) + 'vw)';
+    const target = document.getElementById(id);
+    if(target) target.scrollTop = 0;
+    currentScreen = id;
+    currentIndex = idx;
+    if(idx > highestReached) highestReached = idx;
+    updateProgress(idx);
+    const bar = document.getElementById('progress-bar');
+    const ungameBtn = document.getElementById('ungame-btn');
+    if(id === 'start-screen'){
+      bar.classList.remove('visible');
+      ungameBtn.classList.remove('visible');
+    } else {
+      bar.classList.add('visible');
+      ungameBtn.classList.add('visible');
+    }
+  };
+
+  function updateProgress(idx){
+    const total = screenOrder.length - 1;
+    const progress = idx <= 0 ? 0 : (idx / total) * 100;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    const chapterIdx = chapterScreens.indexOf(currentScreen);
+    if(chapterIdx >= 0){
+      document.getElementById('progress-label').textContent = 'CH ' + (chapterIdx+1) + '/4';
+    } else if(currentScreen === 'faq-screen'){
+      document.getElementById('progress-label').textContent = 'FAQ';
+    } else if(currentScreen === 'completion-screen'){
+      document.getElementById('progress-label').textContent = 'DONE';
+    }
+    document.querySelectorAll('.castle-tower').forEach((t,i) => {
+      if(i < idx) t.classList.add('lit');
+    });
+  }
+
+  window.flyRaven = function(){
+    const raven = document.getElementById('raven');
+    raven.classList.remove('flying');
+    void raven.offsetWidth;
+    raven.classList.add('flying');
+    setTimeout(() => raven.classList.remove('flying'), 2200);
+  };
+
+  window.toggleChapterMenu = function(){
+    document.getElementById('chapter-menu').classList.toggle('open');
+  };
+
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('chapter-menu');
+    if(!menu.contains(e.target) && !e.target.classList.contains('chapter-select-btn')){
+      menu.classList.remove('open');
+    }
+  });
+
+  window.checkQuiz = function(btn, correct){
+    const panel = btn.closest('.quiz-panel');
+    const options = panel.querySelectorAll('.quiz-option');
+    options.forEach(o => { o.disabled = true; o.classList.remove('correct','incorrect'); });
+    if(correct){
+      btn.classList.add('correct');
+      panel.querySelector('.quiz-result.pass').classList.add('show');
+    } else {
+      btn.classList.add('incorrect');
+      options.forEach(o => { if(o.getAttribute('onclick').includes('true')) o.classList.add('correct'); });
+      panel.querySelector('.quiz-result.fail').classList.add('show');
+    }
+  };
+
+  window.toggleFaq = function(btn){
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  };
+
+  window.openUngame = function(){
+    document.getElementById('ungame-overlay').classList.add('active');
+  };
+  window.closeUngame = function(){
+    document.getElementById('ungame-overlay').classList.remove('active');
+  };
+
+  // Lightbox
+  window.openLightbox = function(src){
+    const overlay = document.getElementById('lightbox-overlay');
+    overlay.querySelector('img').src = src;
+    overlay.classList.add('active');
+  };
+  window.closeLightbox = function(){
+    document.getElementById('lightbox-overlay').classList.remove('active');
+  };
+
+  // Fireworks
+  (function(){
+    const c = document.getElementById('fireworks-container');
+    if(!c) return;
+    const colors = ['#c8a84e','#c62828','#5b9bd5','#4caf50','#ff9800','#e8d68c'];
+    for(let i = 0; i < 16; i++){
+      const fw = document.createElement('div');
+      fw.className = 'firework';
+      fw.style.left = (Math.random()*90+5)+'%';
+      fw.style.background = colors[Math.floor(Math.random()*colors.length)];
+      fw.style.animationDelay = (Math.random()*2)+'s';
+      fw.style.animationDuration = (1+Math.random()*1.5)+'s';
+      c.appendChild(fw);
+    }
+  })();
+
+  // Keyboard: arrow keys for navigation, Escape for overlays
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      closeLightbox();
+      closeUngame();
+      document.getElementById('chapter-menu').classList.remove('open');
+    }
+    if(e.key === 'ArrowRight' && currentIndex < screenOrder.length - 1){
+      goToScreen(screenOrder[currentIndex + 1]);
+    }
+    if(e.key === 'ArrowLeft' && currentIndex > 0){
+      goToScreen(screenOrder[currentIndex - 1]);
+    }
+  });
+
+  // ===== ENVIRONMENT SYSTEM =====
+  // Each screen = a GoT location with unique atmosphere
+  // Start = King's Landing, L1 = Red Keep, L2 = Casterly Rock
+  // L3 = Winterfell, L4 = Citadel/Oldtown, FAQ = The Wall, Completion = Dragonstone
+
+  var snowContainer = document.getElementById('snow-container');
+  var dustContainer = document.getElementById('dust-container');
+  var zombieContainer = document.getElementById('zombie-container');
+  var wildfireBar = document.getElementById('wildfire-bar');
+  var dragonfireBurst = document.getElementById('dragonfire-burst');
+  var wallDecorations = document.getElementById('wall-decorations');
+  var emberContainer = document.getElementById('ember-container');
+  var companion = document.getElementById('companion-tyrion');
+
+  // Create wall torches (side decorations)
+  (function(){
+    var positions = [
+      {left:'8px',top:'25%'},{left:'8px',top:'55%'},{left:'8px',top:'80%'},
+      {right:'8px',top:'20%'},{right:'8px',top:'50%'},{right:'8px',top:'75%'}
+    ];
+    positions.forEach(function(pos){
+      var t = document.createElement('div');
+      t.className = 'wall-torch-side';
+      t.innerHTML = '<div class="wt-glow"></div><div class="wt-flame"></div><div class="wt-bracket"></div>';
+      if(pos.left) t.style.left = pos.left;
+      if(pos.right) t.style.right = pos.right;
+      t.style.top = pos.top;
+      wallDecorations.appendChild(t);
+    });
+  })();
+
+  // Create snow particles
+  (function(){
+    for(var i=0;i<40;i++){
+      var s = document.createElement('div');
+      s.className = 'snowflake';
+      s.style.left = Math.random()*100 + '%';
+      s.style.top = '-10px';
+      var sz = (2 + Math.random()*4) + 'px';
+      s.style.width = sz; s.style.height = sz;
+      s.style.animationDuration = (4+Math.random()*6) + 's';
+      s.style.animationDelay = Math.random()*6 + 's';
+      snowContainer.appendChild(s);
+    }
+  })();
+
+  // Create dust motes
+  (function(){
+    for(var i=0;i<30;i++){
+      var d = document.createElement('div');
+      d.className = 'dust-mote';
+      d.style.left = Math.random()*100 + '%';
+      d.style.top = Math.random()*100 + '%';
+      var sz = (1 + Math.random()*3) + 'px';
+      d.style.width = sz; d.style.height = sz;
+      d.style.animationDuration = (6+Math.random()*8) + 's';
+      d.style.animationDelay = Math.random()*6 + 's';
+      dustContainer.appendChild(d);
+    }
+  })();
+
+  // Create zombie hands
+  (function(){
+    for(var i=0;i<8;i++){
+      var zh = document.createElement('div');
+      zh.className = 'zombie-hand';
+      zh.style.left = (5 + Math.random()*90) + '%';
+      zh.innerHTML = '<div class="zh-glow"></div><div class="zh-fingers"><div class="zh-finger"></div><div class="zh-finger" style="height:12px"></div><div class="zh-finger" style="height:8px"></div></div><div class="zh-arm"></div>';
+      zombieContainer.appendChild(zh);
+    }
+  })();
+
+  // Activate per-screen environment
+  function setEnvironment(screenId){
+    // Reset all environment layers
+    snowContainer.classList.remove('active');
+    dustContainer.classList.remove('active');
+    zombieContainer.classList.remove('active');
+    wildfireBar.classList.remove('active');
+    wallDecorations.classList.remove('visible');
+    wallDecorations.classList.remove('ice');
+    emberContainer.style.display = 'none';
+
+    // Remove frost from quiz panels
+    document.querySelectorAll('.frost-border').forEach(function(el){ el.classList.remove('frost-border'); });
+
+    // Raise/lower zombie hands
+    document.querySelectorAll('.zombie-hand').forEach(function(zh){ zh.classList.remove('risen'); });
+
+    switch(screenId){
+      case 'start-screen':
+        // King's Landing: fire embers, wall torches, warm glow
+        emberContainer.style.display = 'block';
+        wallDecorations.classList.add('visible');
+        break;
+      case 'level-1':
+        // The Red Keep: embers, torches, stormy atmosphere
+        emberContainer.style.display = 'block';
+        wallDecorations.classList.add('visible');
+        break;
+      case 'level-2':
+        // Casterly Rock: golden torchlight, embers
+        emberContainer.style.display = 'block';
+        wallDecorations.classList.add('visible');
+        break;
+      case 'level-3':
+        // Winterfell: light snow, cold atmosphere, blue torches
+        snowContainer.classList.add('active');
+        wallDecorations.classList.add('visible');
+        wallDecorations.classList.add('ice');
+        break;
+      case 'level-4':
+        // The Citadel: dust motes, candlelight, warm & quiet
+        dustContainer.classList.add('active');
+        wallDecorations.classList.add('visible');
+        break;
+      case 'faq-screen':
+        // The Wall / Castle Black: heavy snow, frost, zombie hands, blue torches
+        snowContainer.classList.add('active');
+        zombieContainer.classList.add('active');
+        wallDecorations.classList.add('visible');
+        wallDecorations.classList.add('ice');
+        // Frost effect on FAQ items
+        document.querySelectorAll('.faq-item').forEach(function(el){ el.classList.add('frost-border'); });
+        // Zombie hands rise one by one
+        var hands = document.querySelectorAll('.zombie-hand');
+        hands.forEach(function(zh, idx){
+          setTimeout(function(){ zh.classList.add('risen'); }, 800 + idx * 400);
+        });
+        break;
+      case 'completion-screen':
+        // Dragonstone: wildfire, dragonfire burst, embers, everything epic
+        emberContainer.style.display = 'block';
+        wildfireBar.classList.add('active');
+        wallDecorations.classList.add('visible');
+        // Dragonfire burst animation
+        dragonfireBurst.classList.remove('active');
+        void dragonfireBurst.offsetWidth;
+        dragonfireBurst.classList.add('active');
+        setTimeout(function(){ dragonfireBurst.classList.remove('active'); }, 2200);
+        break;
+    }
+  }
+
+  // Dragon fly animation with fire trail
+  window.flyDragon = function(){
+    var dragon = document.getElementById('dragon');
+    dragon.classList.remove('flying');
+    void dragon.offsetWidth;
+    dragon.classList.add('flying');
+    // Fire trail behind dragon
+    var trailInterval = setInterval(function(){
+      var rect = dragon.getBoundingClientRect();
+      if(rect.left < -80 || rect.left > window.innerWidth + 80){
+        clearInterval(trailInterval);
+        return;
+      }
+      for(var t=0;t<3;t++){
+        var trail = document.createElement('div');
+        trail.className = 'fire-trail';
+        trail.style.left = (rect.left + 10 + Math.random()*20) + 'px';
+        trail.style.top = (rect.top + 15 + Math.random()*15) + 'px';
+        document.body.appendChild(trail);
+        setTimeout(function(){ trail.remove(); }, 600);
+      }
+    }, 80);
+    setTimeout(function(){ dragon.classList.remove('flying'); clearInterval(trailInterval); }, 3200);
+  };
+
+  // Wrap goToScreen for environments + dragon + companion
+  var origGoToScreen = window.goToScreen;
+  var transitionCount = 0;
+  window.goToScreen = function(id){
+    origGoToScreen(id);
+    transitionCount++;
+
+    // Set environment for this screen
+    setEnvironment(id);
+
+    // Dragon flies on every 3rd transition and on completion
+    if(transitionCount % 3 === 0 || id === 'completion-screen'){
+      setTimeout(flyDragon, 400);
+    }
+    // Raven on level transitions
+    if(id === 'level-1' || id === 'level-3'){
+      setTimeout(flyRaven, 200);
+    }
+
+    // Show companion Tyrion on game screens
+    if(id === 'start-screen'){
+      companion.classList.remove('visible');
+    } else {
+      companion.classList.add('visible');
+    }
+  };
+
+  // Floating embers (always created, visibility toggled by environment)
+  (function(){
+    function createEmber(){
+      var e = document.createElement('div');
+      e.className = 'ember';
+      e.style.left = Math.random()*100 + 'vw';
+      e.style.bottom = '-10px';
+      e.style.animationDuration = (5+Math.random()*7) + 's';
+      e.style.animationDelay = Math.random()*2 + 's';
+      var sz = (2+Math.random()*3) + 'px';
+      e.style.width = sz; e.style.height = sz;
+      emberContainer.appendChild(e);
+      setTimeout(function(){ e.remove(); }, 14000);
+    }
+    setInterval(createEmber, 800);
+    for(var i=0;i<8;i++) setTimeout(createEmber, i*300);
+  })();
+
+  // Twinkling stars (always visible)
+  (function(){
+    var sb = document.getElementById('stars-bg');
+    if(!sb) return;
+    for(var i=0;i<60;i++){
+      var s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random()*100 + '%';
+      s.style.top = Math.random()*100 + '%';
+      s.style.animationDuration = (2+Math.random()*5) + 's';
+      s.style.animationDelay = Math.random()*4 + 's';
+      if(Math.random()>0.7){ s.style.width = '3px'; s.style.height = '3px'; }
+      sb.appendChild(s);
+    }
+  })();
+
+  // Add torches to chapter title cards
+  (function(){
+    var cards = document.querySelectorAll('.chapter-title-card');
+    cards.forEach(function(card){
+      var lt = document.createElement('div');
+      lt.className = 'torch left-torch';
+      lt.innerHTML = '<div class="torch-flame"></div><div class="torch-base"></div>';
+      var rt = document.createElement('div');
+      rt.className = 'torch right-torch';
+      rt.innerHTML = '<div class="torch-flame"></div><div class="torch-base"></div>';
+      card.appendChild(lt);
+      card.appendChild(rt);
+    });
+  })();
+
+  // Quiz shake on wrong answer
+  var origCheckQuiz = window.checkQuiz;
+  window.checkQuiz = function(btn, correct){
+    origCheckQuiz(btn, correct);
+    if(!correct){
+      var panel = btn.closest('.quiz-panel');
+      panel.classList.add('quiz-shake');
+      setTimeout(function(){ panel.classList.remove('quiz-shake'); }, 500);
+    }
+  };
+
+  // Initialize start screen environment
+  setEnvironment('start-screen');
+
+  // ===== TYRION QUOTE EASTER EGG =====
+  var tyrionQuotes = [
+    "I drink and I know things.",
+    "Never forget what you are. The rest of the world will not. Wear it like armor, and it can never be used to hurt you.",
+    "A mind needs books like a sword needs a whetstone.",
+    "I have a tender spot in my heart for cripples, bastards, and broken things.",
+    "It\u2019s hard to put a leash on a dog once you\u2019ve put a crown on its head.",
+    "That\u2019s what I do. I drink and I know things.",
+    "A Lannister always pays his debts.",
+    "Death is so final, whereas life\u2026 ah, life is full of possibilities.",
+    "Everything\u2019s better with some wine in the belly.",
+    "Let me give you some advice, bastard. Never forget what you are. The rest of the world will not."
+  ];
+  var quoteIndex = 0;
+  var speechBubble = document.getElementById('tyrion-speech-bubble');
+  var quoteTimeout = null;
+
+  companion.addEventListener('click', function(){
+    if(quoteTimeout) clearTimeout(quoteTimeout);
+    speechBubble.classList.remove('show');
+    void speechBubble.offsetWidth;
+    speechBubble.textContent = '\u201C' + tyrionQuotes[quoteIndex] + '\u201D';
+    speechBubble.classList.add('show');
+    quoteIndex = (quoteIndex + 1) % tyrionQuotes.length;
+    quoteTimeout = setTimeout(function(){
+      speechBubble.classList.remove('show');
+    }, 4000);
+  });
+
+})();
+</script>
+</body>
+</html>
