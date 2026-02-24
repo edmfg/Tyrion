@@ -25,6 +25,8 @@ body{
   background:var(--dark-bg);color:#e0e0e0;
   height:100vh;overflow:hidden;
   font-size:16px;line-height:1.6;
+  -webkit-text-size-adjust:100%;
+  overflow-x:hidden;
 }
 
 /* HORIZONTAL SLIDER */
@@ -41,6 +43,7 @@ body{
   overflow-y:auto;overflow-x:hidden;
   padding:42px 40px 20px;
   display:flex;flex-direction:column;
+  -webkit-overflow-scrolling:touch;
 }
 .screen-inner{
   max-width:1200px;width:100%;
@@ -71,9 +74,7 @@ body{
 .chapter-menu-item{display:block;width:100%;text-align:left;padding:8px 14px;font-family:var(--font-body);font-size:13px;color:#ccc;background:none;border:none;cursor:pointer;border-bottom:1px solid #333}
 .chapter-menu-item:last-child{border-bottom:none}
 .chapter-menu-item:hover{background:rgba(200,168,78,0.1);color:var(--gold)}
-.ungame-btn{position:fixed;bottom:12px;right:12px;z-index:999;font-family:var(--font-body);font-size:12px;color:var(--parchment);background:rgba(30,30,30,0.9);border:1px solid var(--gold);padding:5px 12px;cursor:pointer;border-radius:4px;display:none}
-.ungame-btn.visible{display:block}
-.ungame-btn:hover{background:rgba(200,168,78,0.2)}
+/* ungame btn is now inside the progress bar, styled as chapter-select-btn */
 
 /* Raven */
 .pixel-raven{position:fixed;z-index:9999;pointer-events:none;width:40px;height:30px;top:-40px;left:-40px}
@@ -163,7 +164,7 @@ body{
 .quiz-panel{background:linear-gradient(135deg,#2a1a2a,#1e1420);border:1px solid var(--ice-blue);border-radius:6px;padding:16px 18px}
 .quiz-panel h3{font-family:var(--font-medieval);font-size:20px;color:var(--ice-blue);margin-bottom:8px}
 .quiz-panel p{font-size:15px;color:#ddd;margin-bottom:10px;line-height:1.6}
-.quiz-option{display:block;width:100%;text-align:left;font-family:var(--font-body);font-size:14px;color:var(--parchment);background:rgba(50,50,60,0.6);border:1px solid var(--stone);padding:10px 14px;margin-bottom:5px;cursor:pointer;border-radius:4px;transition:all 0.2s;min-height:40px}
+.quiz-option{display:block;width:100%;text-align:left;font-family:var(--font-body);font-size:14px;color:var(--parchment);background:rgba(50,50,60,0.6);border:1px solid var(--stone);padding:10px 14px;margin-bottom:5px;cursor:pointer;border-radius:4px;transition:all 0.2s;min-height:44px}
 .quiz-option:hover{border-color:var(--ice-blue);background:rgba(91,155,213,0.1)}
 .quiz-option.correct{border-color:var(--green-mid);background:rgba(76,175,80,0.15);color:var(--green-light)}
 .quiz-option.incorrect{border-color:var(--crimson-light);background:rgba(198,40,40,0.15);color:#e57373;opacity:0.7}
@@ -286,47 +287,124 @@ body{
 
 /* RESPONSIVE */
 @media(max-width:768px){
+  /* Grids → single column */
   .two-col,.three-col,.houses-grid,.faq-grid,.library-shelf{grid-template-columns:1fr}
   .legend-box .legend-grid{grid-template-columns:1fr 1fr}
+
+  /* Screen padding */
   .screen{padding:42px 16px 14px}
+
+  /* Stack flex layouts */
   .dialogue-box-with-char{flex-direction:column;align-items:center}
   .tyrion-quote{flex-direction:column;align-items:center;text-align:center}
   .hand-card{flex-direction:column;text-align:center}
+
+  /* Chapter title decorations */
   .chapter-title-card::before,.chapter-title-card::after{display:none}
-  body{font-size:14px}
-  .parchment-panel h3,.decree h3,.quiz-panel h3,.laws-panel h3{font-size:15px}
-  .parchment-panel p,.parchment-panel li,.decree p,.decree li,.quiz-panel p{font-size:13px}
+  .chapter-title-card .torch{display:none}
+
+  /* Typography scale-down */
+  body{font-size:15px}
+  .parchment-panel h3,.decree h3,.quiz-panel h3,.laws-panel h3,.hand-card h3{font-size:17px}
+  .parchment-panel p,.parchment-panel li,.decree p,.decree li,.quiz-panel p,.laws-panel li,.hand-card p{font-size:14px}
   .chapter-title{font-size:22px}
-  .main-title{font-size:40px}
+  .main-title{font-size:38px}
+  .subtitle{font-size:16px}
+  .got-frame{font-size:13px}
+
+  /* Buttons */
   .nav-btn{font-size:8px;padding:8px 14px}
-  .cta-btn{font-size:9px;padding:8px 18px}
-  .decree{padding:10px 12px}
-  .tome{padding:14px}
-  .tome h4{font-size:16px}
-  .faq-question{font-size:12px;padding:6px 8px}
-  .faq-answer-inner{font-size:12px;padding:0 8px 6px}
-  .proclamation{padding:10px 14px}
-  .proclamation li{font-size:13px}
-  .legend-item{font-size:11px}
+  .cta-btn{font-size:9px;padding:10px 20px}
+  .deck-link{font-size:9px;padding:10px 18px}
+
+  /* Panels */
+  .parchment-panel,.decree,.quiz-panel,.laws-panel,.plain-box{padding:12px 14px}
+  .dialogue-box{padding:12px 14px}
+  .dialogue-box p{font-size:14px}
+  .tome{padding:16px}
+  .tome h4{font-size:18px}
+  .tome-icon{font-size:36px}
+
+  /* FAQ */
+  .faq-question{font-size:14px;padding:10px 12px}
+  .faq-answer-inner{font-size:13px;padding:0 12px 10px}
+  .faq-grid{gap:8px}
+
+  /* Completion */
+  .proclamation{padding:14px 16px}
+  .proclamation li{font-size:14px}
+  .badge{width:70px;height:70px;font-size:28px}
+
+  /* Legend */
+  .legend-item{font-size:13px}
+  .legend-box{padding:12px 14px}
+
+  /* Houses */
+  .house-card{padding:10px}
+  .house-sigil{font-size:30px}
+  .house-name{font-size:18px}
+  .roster-names{font-size:13px}
+
+  /* Ungame overlay */
   .ungame-content{padding:20px 16px}
   .ungame-content h1{font-size:22px}
   .ungame-content h2{font-size:18px}
-  .deck-link{font-size:9px;padding:10px 18px}
-  .house-card{padding:8px}
+
+  /* Wall torches — hide side torches on narrow screens */
+  .wall-torch-side{display:none}
+
+  /* Companion & speech bubble */
+  .companion-tyrion{bottom:8px;left:8px}
+  .tyrion-speech-bubble{bottom:52px;left:8px;max-width:240px;font-size:13px}
+
+  /* Lightbox */
+  .lightbox-overlay img{max-width:98vw;max-height:85vh}
+  .lightbox-close{top:10px;right:10px;width:40px;height:40px;font-size:24px}
+
+  /* Zoomable images */
+  .zoomable-img{max-height:160px}
+
+  /* Edge glows — reduce width */
+  .screen-glow.fire::before,.screen-glow.fire::after,
+  .screen-glow.ice::before,.screen-glow.ice::after,
+  .screen-glow.gold::before,.screen-glow.gold::after,
+  .screen-glow.green::before,.screen-glow.green::after{width:30px}
+
+  /* Progress bar */
+  .progress-bar-container{padding:4px 10px;height:34px}
+  .progress-label{font-size:6px}
+  .chapter-select-btn{font-size:6px;padding:2px 5px}
 }
+
 @media(max-width:500px){
   .legend-box .legend-grid{grid-template-columns:1fr}
   .screen{padding:40px 10px 10px}
-  .houses-grid{gap:6px}
-  .house-card{padding:6px}
-  .house-name{font-size:15px}
-  .house-sigil{font-size:22px}
-  .roster-names{font-size:11px}
+
+  /* Houses */
+  .houses-grid{gap:8px}
+  .house-card{padding:8px}
+  .house-name{font-size:16px}
+  .house-sigil{font-size:26px}
+  .roster-names{font-size:12px}
+
+  /* Misc */
   .treasury-meter{padding:6px}
   .nav-row{padding-top:8px}
   .dialogue-box{padding:10px 12px}
   .dialogue-box p{font-size:13px}
   .deck-link{font-size:8px;padding:8px 14px}
+  .main-title{font-size:32px}
+  .subtitle{font-size:14px}
+  .chapter-title{font-size:20px}
+
+  /* Speech bubble */
+  .tyrion-speech-bubble{max-width:200px;font-size:12px;padding:8px 10px}
+
+  /* Hide dragon and raven on very small screens — too distracting */
+  .pixel-dragon,.pixel-raven{display:none!important}
+
+  /* Edge glows off */
+  .screen-glow::before,.screen-glow::after{display:none}
 }
 
 /* Embers */
@@ -714,6 +792,7 @@ body{
     <div class="castle-tower" style="height:12px"></div>
   </div>
   <button class="chapter-select-btn" onclick="toggleChapterMenu()">CHAPTERS</button>
+  <button class="chapter-select-btn" id="ungame-btn" onclick="openUngame()" style="display:none">&#128220; JUST THE FACTS</button>
 </div>
 <div class="chapter-menu" id="chapter-menu">
   <button class="chapter-menu-item" onclick="goToScreen('start-screen')">Start Screen</button>
@@ -724,7 +803,6 @@ body{
   <button class="chapter-menu-item" onclick="goToScreen('faq-screen')">FAQs</button>
   <button class="chapter-menu-item" onclick="goToScreen('completion-screen')">Completion</button>
 </div>
-<button class="ungame-btn" id="ungame-btn" onclick="openUngame()">&#128220; Just the facts</button>
 
 <!-- ====== SLIDER ====== -->
 <div class="slider" id="slider">
@@ -997,7 +1075,7 @@ body{
 
     <div class="plain-box mb-sm">
       <span class="plain-box-label">BOTTOM LINE</span>
-      <p>Ed coordinates globally. Regional leads own their updates. Keep it monthly. Keep meetings small.</p>
+      <p>Ed coordinates globally. Regional leads own their updates. Updates as soon as decisions are made and domains are locked.</p>
     </div>
 
     <div class="nav-row">
@@ -1259,10 +1337,10 @@ body{
     const ungameBtn = document.getElementById('ungame-btn');
     if(id === 'start-screen'){
       bar.classList.remove('visible');
-      ungameBtn.classList.remove('visible');
+      ungameBtn.style.display = 'none';
     } else {
       bar.classList.add('visible');
-      ungameBtn.classList.add('visible');
+      ungameBtn.style.display = '';
     }
   };
 
