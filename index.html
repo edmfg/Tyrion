@@ -1965,6 +1965,7 @@ body{
     if(e.key === 'Escape'){
       closeLightbox();
       closeUngame();
+      closeBookmarkPrompt();
       document.getElementById('chapter-menu').classList.remove('open');
     }
     if(e.key === 'ArrowRight' && currentIndex < screenOrder.length - 1){
@@ -2346,6 +2347,7 @@ body{
   // ===== DRAGON INVADERS GAME =====
   var gameRunning = false;
   var gameAnimFrame = null;
+  var currentGameOnKey = null;
 
   window.openDragonGame = function(){
     document.getElementById('game-overlay').classList.add('active');
@@ -2355,6 +2357,11 @@ body{
     document.getElementById('game-overlay').classList.remove('active');
     gameRunning = false;
     if(gameAnimFrame) cancelAnimationFrame(gameAnimFrame);
+    if(currentGameOnKey){
+      document.removeEventListener('keydown', currentGameOnKey);
+      document.removeEventListener('keyup', currentGameOnKey);
+      currentGameOnKey = null;
+    }
   };
 
   function startDragonGame(){
@@ -2381,6 +2388,7 @@ body{
       keys[e.key] = e.type === 'keydown';
       if(e.key === ' ' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') e.preventDefault();
     }
+    currentGameOnKey = onKey;
     document.addEventListener('keydown', onKey);
     document.addEventListener('keyup', onKey);
 
