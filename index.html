@@ -134,7 +134,13 @@ body{
 .cta-btn:active{transform:translateY(0)}
 .nav-btn{font-family:var(--font-pixel);font-size:9px;color:var(--gold);background:linear-gradient(180deg,#333,#222);border:2px solid var(--gold);padding:8px 18px;cursor:pointer;border-radius:3px;transition:all 0.2s;min-width:44px;min-height:44px}
 .nav-btn:hover{background:linear-gradient(180deg,#444,#333)}
-.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:12px;flex-shrink:0}
+.nav-row{display:none}
+.screen-nav-back,.screen-nav-fwd{
+  position:fixed;top:50%;transform:translateY(-50%);z-index:90;
+  pointer-events:auto;
+}
+.screen-nav-back{left:10px}
+.screen-nav-fwd{right:10px}
 
 /* Chapter Title */
 .chapter-title-card{text-align:center;margin-bottom:12px;padding:10px 16px;border:2px solid var(--gold);background:linear-gradient(135deg,rgba(200,168,78,0.05),rgba(139,26,26,0.05));border-radius:4px;position:relative;flex-shrink:0}
@@ -224,7 +230,7 @@ body{
 .laws-panel li{font-size:15px;line-height:1.6;color:#ddd;margin-bottom:5px}
 
 /* Library */
-.library-shelf{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.library-shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .tome{background:linear-gradient(135deg,#2a2218,#1e1a14);border:2px solid var(--gold);border-radius:6px;padding:24px;text-align:center;transition:all 0.3s;animation:glowPulse 3s ease-in-out infinite}
 .tome:hover{transform:translateY(-3px);box-shadow:0 0 20px rgba(200,168,78,0.4)}
 .tome-icon{font-size:48px;margin-bottom:10px;display:block}
@@ -286,16 +292,20 @@ body{
 .flex-col{display:flex;flex-direction:column}
 .flex-1{flex:1;min-height:0}
 .internal-disclaimer{font-family:var(--font-pixel);font-size:7px;color:var(--crimson-light);text-align:center;opacity:0.7;padding-top:8px;letter-spacing:1px}
-.mfg-logo{position:fixed;bottom:12px;right:12px;z-index:998;width:48px;height:auto;opacity:0.7;pointer-events:none}
+.mfg-logo-group{position:fixed;bottom:12px;right:12px;z-index:998;display:flex;align-items:center;gap:6px;opacity:0.7;pointer-events:none}
+.mfg-logo{width:48px;height:auto}
+.version-label{font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);letter-spacing:0.5px;white-space:nowrap}
 
-/* RESPONSIVE */
+/* ===================== RESPONSIVE ===================== */
+
+/* --- TABLET (max-width:768px) --- */
 @media(max-width:768px){
   /* Grids → single column */
   .two-col,.three-col,.houses-grid,.faq-grid,.library-shelf{grid-template-columns:1fr}
   .legend-box .legend-grid{grid-template-columns:1fr 1fr}
 
-  /* Screen padding */
-  .screen{padding:42px 16px 14px}
+  /* Screen padding — generous sides for fixed nav buttons */
+  .screen{padding:42px 50px 14px}
 
   /* Stack flex layouts */
   .dialogue-box-with-char{flex-direction:column;align-items:center}
@@ -305,6 +315,7 @@ body{
   /* Chapter title decorations */
   .chapter-title-card::before,.chapter-title-card::after{display:none}
   .chapter-title-card .torch{display:none}
+  .chapter-title-card{padding:8px 12px;margin-bottom:10px}
 
   /* Typography scale-down */
   body{font-size:15px}
@@ -314,19 +325,29 @@ body{
   .main-title{font-size:38px}
   .subtitle{font-size:16px}
   .got-frame{font-size:13px}
+  .dialogue-box .speaker{font-size:7px}
+  .chapter-num{font-size:7px}
 
   /* Buttons */
-  .nav-btn{font-size:8px;padding:8px 14px}
-  .cta-btn{font-size:9px;padding:10px 20px}
-  .deck-link{font-size:9px;padding:10px 18px}
+  .nav-btn{font-size:7px;padding:8px 12px}
+  .cta-btn{font-size:8px;padding:8px 16px}
+  .screen-nav-back{left:4px}
+  .screen-nav-fwd{right:4px}
+  .deck-link{font-size:8px;padding:10px 16px}
+  .kill-time-btn{font-size:6px;padding:10px 20px}
+  .bookmark-btn{font-size:6px;padding:8px 16px}
+  .bookmark-toast{padding:22px 28px}
+  .bookmark-toast-title{font-size:18px}
+  .bookmark-toast-keys{font-size:12px;padding:8px 16px}
 
-  /* Panels */
-  .parchment-panel,.decree,.quiz-panel,.laws-panel,.plain-box{padding:12px 14px}
-  .dialogue-box{padding:12px 14px}
+  /* Panels — tighter padding */
+  .parchment-panel,.decree,.quiz-panel,.laws-panel,.plain-box{padding:10px 12px}
+  .dialogue-box{padding:10px 12px}
   .dialogue-box p{font-size:14px}
-  .tome{padding:16px}
+  .tome{padding:14px}
   .tome h4{font-size:18px}
-  .tome-icon{font-size:36px}
+  .tome p{font-size:14px}
+  .tome-icon{font-size:34px}
 
   /* FAQ */
   .faq-question{font-size:14px;padding:10px 12px}
@@ -334,18 +355,20 @@ body{
   .faq-grid{gap:8px}
 
   /* Completion */
-  .proclamation{padding:14px 16px}
+  .proclamation{padding:12px 14px}
   .proclamation li{font-size:14px}
-  .badge{width:70px;height:70px;font-size:28px}
+  .proclamation .got-flavor{font-size:12px}
+  .badge{width:66px;height:66px;font-size:28px}
+  .completion-title{font-size:28px}
 
   /* Legend */
   .legend-item{font-size:13px}
-  .legend-box{padding:12px 14px}
+  .legend-box{padding:10px 12px}
 
   /* Houses */
   .house-card{padding:10px}
-  .house-sigil{font-size:30px}
-  .house-name{font-size:18px}
+  .house-sigil{font-size:28px}
+  .house-name{font-size:18px;margin-bottom:6px}
   .roster-names{font-size:13px}
 
   /* Ungame overlay */
@@ -353,61 +376,190 @@ body{
   .ungame-content h1{font-size:22px}
   .ungame-content h2{font-size:18px}
 
-  /* Wall torches — hide side torches on narrow screens */
+  /* Wall torches — hide on narrow screens */
   .wall-torch-side{display:none}
 
   /* Companion & speech bubble */
-  .companion-tyrion{bottom:8px;left:8px}
-  .tyrion-speech-bubble{bottom:68px;left:8px;max-width:240px;font-size:13px}
+  .companion-tyrion{bottom:6px;left:6px}
+  .companion-tyrion svg,.companion-tyrion .pixel-tyrion{width:36px;height:36px}
+  .tyrion-speech-bubble{bottom:56px;left:6px;max-width:220px;font-size:12px;padding:8px 10px}
 
   /* Lightbox */
   .lightbox-overlay img{max-width:98vw;max-height:85vh}
   .lightbox-close{top:10px;right:10px;width:40px;height:40px;font-size:24px}
 
   /* Zoomable images */
-  .zoomable-img{max-height:160px}
+  .zoomable-img{max-height:220px}
+
+  /* Diamond + image row → stack vertically */
+  .diamond-img-row{flex-direction:column!important;gap:16px!important}
+  .diamond-img-row .zoomable-img{max-width:100%!important;max-height:220px!important}
 
   /* Edge glows — reduce width */
   .screen-glow.fire::before,.screen-glow.fire::after,
   .screen-glow.ice::before,.screen-glow.ice::after,
   .screen-glow.gold::before,.screen-glow.gold::after,
-  .screen-glow.green::before,.screen-glow.green::after{width:30px}
+  .screen-glow.green::before,.screen-glow.green::after{width:20px}
 
   /* Progress bar */
-  .progress-bar-container{padding:4px 10px;height:34px}
+  .progress-bar-container{padding:4px 8px;height:32px;gap:6px}
   .progress-label{font-size:6px}
+  .progress-track{height:14px}
   .chapter-select-btn{font-size:6px;padding:2px 5px}
+  .castle-towers{display:none}
+
+  /* Spacing utilities override */
+  .mb-sm{margin-bottom:6px}
+  .mb-md{margin-bottom:10px}
+  .gap-sm{gap:6px}
+
+  /* Game overlay */
+  .game-hud{font-size:6px;padding:6px 4px}
+  .game-close-btn{font-size:5px;padding:6px 12px}
+
+  /* Tyrion quote */
+  .tyrion-quote blockquote{font-size:15px}
+  .tyrion-quote{padding:10px 12px}
+
+  /* Internal disclaimer */
+  .internal-disclaimer{font-size:6px;padding-top:6px}
+
+  /* MFG logo */
+  .mfg-logo-group{bottom:8px;right:8px;gap:4px}
+  .mfg-logo{width:32px}
+  .version-label{font-size:4px}
 }
 
+/* --- PHONE (max-width:500px) --- */
 @media(max-width:500px){
   .legend-box .legend-grid{grid-template-columns:1fr}
-  .screen{padding:40px 10px 10px}
+  .screen{padding:36px 44px 10px}
+
+  /* Typography */
+  .main-title{font-size:28px;letter-spacing:2px}
+  .subtitle{font-size:13px}
+  .tagline{font-size:12px}
+  .chapter-title{font-size:18px}
+  .chapter-num{font-size:6px}
+  .time-estimate{font-size:7px}
+  .dialogue-box p{font-size:13px}
+  .parchment-panel p,.parchment-panel li,.decree p,.decree li,
+  .quiz-panel p,.laws-panel li,.hand-card p{font-size:13px}
+  .parchment-panel h3,.decree h3,.quiz-panel h3,.laws-panel h3,.hand-card h3{font-size:16px}
 
   /* Houses */
   .houses-grid{gap:8px}
   .house-card{padding:8px}
-  .house-name{font-size:16px}
-  .house-sigil{font-size:26px}
+  .house-name{font-size:15px}
+  .house-sigil{font-size:24px}
   .roster-names{font-size:12px}
+  .roster-label{font-size:6px}
 
-  /* Misc */
-  .treasury-meter{padding:6px}
-  .nav-row{padding-top:8px}
-  .dialogue-box{padding:10px 12px}
-  .dialogue-box p{font-size:13px}
-  .deck-link{font-size:8px;padding:8px 14px}
-  .main-title{font-size:32px}
-  .subtitle{font-size:14px}
-  .chapter-title{font-size:20px}
+  /* Buttons — compact for small screen */
+  .nav-btn{font-size:6px;padding:6px 8px;min-width:36px;min-height:36px}
+  .cta-btn{font-size:7px;padding:8px 12px;min-width:36px;min-height:36px}
+  .screen-nav-back{left:2px}
+  .screen-nav-fwd{right:2px}
+  .deck-link{font-size:7px;padding:8px 12px}
+  .kill-time-btn{font-size:5px;padding:8px 14px}
+
+  /* Panels — minimum padding */
+  .parchment-panel,.decree,.quiz-panel,.laws-panel,.plain-box{padding:8px 10px}
+  .dialogue-box{padding:8px 10px}
+  .plain-box-label{font-size:7px}
+  .treasury-meter{padding:5px}
+  .treasury-meter h4{font-size:6px}
+
+  /* FAQ */
+  .faq-question{font-size:13px;padding:8px 10px}
+  .faq-answer-inner{font-size:12px;padding:0 10px 8px}
+
+  /* Completion */
+  .completion-title{font-size:22px}
+  .badge{width:56px;height:56px;font-size:24px}
+  .proclamation li{font-size:13px;margin-bottom:6px}
+  .proclamation .got-flavor{font-size:11px}
+  .proclamation h3{font-size:18px}
+
+  /* Legend */
+  .legend-item{font-size:12px}
+
+  /* Tome/Library */
+  .tome{padding:12px}
+  .tome h4{font-size:16px}
+  .tome-icon{font-size:28px}
+  .tome p{font-size:13px}
+
+  /* Diamond — smaller on phone */
+  .diamond-btn{width:110px;height:110px}
+  .diamond-btn-inner{font-size:5px;max-width:85px;padding:4px}
+  .diamond-btn-inner .diamond-emoji{font-size:14px;margin-bottom:2px}
+  .diamond-btn-inner .diamond-label{font-size:5px}
+  .diamond-btn-inner .diamond-sub{font-size:8px}
+
+  /* Images — taller on phone since full width */
+  .zoomable-img{max-height:180px}
+  .diamond-img-row .zoomable-img{max-height:180px!important}
 
   /* Speech bubble */
-  .tyrion-speech-bubble{max-width:200px;font-size:12px;padding:8px 10px}
+  .tyrion-speech-bubble{max-width:180px;font-size:11px;padding:6px 8px}
+  .tyrion-speech-bubble::after{display:none}
 
-  /* Hide dragon and raven on very small screens — too distracting */
+  /* Hide decorative elements */
   .pixel-dragon,.pixel-raven{display:none!important}
-
-  /* Edge glows off */
   .screen-glow::before,.screen-glow::after{display:none}
+  .decree::before{width:16px;height:16px;right:6px}
+
+  /* Progress bar — ultra compact */
+  .progress-bar-container{padding:3px 6px;height:28px;gap:4px}
+  .progress-label{font-size:5px}
+  .progress-track{height:12px}
+  .chapter-select-btn{font-size:5px;padding:2px 4px}
+
+  /* Game */
+  .game-hud{font-size:5px}
+  .game-close-btn{font-size:5px;padding:5px 10px}
+
+  /* Companion */
+  .companion-tyrion{bottom:4px;left:4px}
+  .mfg-logo-group{bottom:4px;right:4px;opacity:0.5;gap:3px}
+  .mfg-logo{width:24px}
+  .version-label{font-size:4px}
+
+  /* Laws panel */
+  .laws-panel li{font-size:13px}
+  .laws-panel h3{font-size:17px}
+
+  /* Got frame */
+  .got-frame{font-size:12px;padding:5px 10px}
+
+  /* Hand card */
+  .hand-icon{font-size:26px}
+  .hand-card{padding:10px 12px;gap:10px}
+  .hand-card .got-quote{font-size:11px}
+}
+
+/* --- VERY SMALL PHONE (max-width:380px) --- */
+@media(max-width:380px){
+  .screen{padding:32px 38px 8px}
+  .main-title{font-size:24px}
+  .subtitle{font-size:12px}
+  .chapter-title{font-size:16px}
+  .nav-btn{font-size:5px;padding:5px 6px}
+  .cta-btn{font-size:6px;padding:6px 10px}
+  .dialogue-box p{font-size:12px}
+  .diamond-btn{width:90px;height:90px}
+  .diamond-btn-inner{font-size:4px;max-width:70px}
+  .diamond-btn-inner .diamond-emoji{font-size:12px}
+  .diamond-btn-inner .diamond-label{font-size:4px}
+  .diamond-btn-inner .diamond-sub{font-size:7px}
+  .legend-item{font-size:11px}
+  .zoomable-img{max-height:140px}
+  .faq-question{font-size:12px}
+  .proclamation{padding:10px 12px}
+  .house-name{font-size:14px}
+  .tome h4{font-size:15px}
+  .tome-icon{font-size:24px}
 }
 
 /* Embers */
@@ -526,16 +678,28 @@ body{
 #level-3 .chapter-title{color:var(--ice-blue)}
 #level-3 .chapter-title-card{border-color:rgba(91,155,213,0.4)}
 
-/* The Citadel — warm amber-brown, candlelit library */
+/* Harrenhal — dark, scorched, warm ember tones */
 #level-4{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(180,100,30,0.3) 0%,transparent 50%),
+    radial-gradient(ellipse at 0% 100%,rgba(140,60,10,0.2) 0%,transparent 40%),
+    radial-gradient(ellipse at 100% 100%,rgba(140,60,10,0.2) 0%,transparent 40%),
+    linear-gradient(180deg,#120e08,#0d0a06);
+}
+#level-4 .parchment-panel{background:linear-gradient(135deg,#2a2018,#1e1810);border-color:rgba(180,120,40,0.3)}
+#level-4 .chapter-title{color:#d4a04e}
+#level-4 .chapter-title-card{border-color:rgba(200,140,50,0.5)}
+
+/* The Citadel — warm amber-brown, candlelit library */
+#level-5{
   background:
     radial-gradient(ellipse at 30% 20%,rgba(200,168,78,0.25) 0%,transparent 40%),
     radial-gradient(ellipse at 70% 80%,rgba(200,168,78,0.2) 0%,transparent 35%),
     radial-gradient(ellipse at 50% 50%,rgba(60,40,15,0.8) 0%,transparent 60%),
     linear-gradient(180deg,#12100a,#0a0806);
 }
-#level-4 .tome{border-color:rgba(200,168,78,0.5);background:linear-gradient(135deg,#2a2418,#1e1c10)}
-#level-4 .chapter-title-card{border-color:rgba(200,168,78,0.5)}
+#level-5 .tome{border-color:rgba(200,168,78,0.5);background:linear-gradient(135deg,#2a2418,#1e1c10)}
+#level-5 .chapter-title-card{border-color:rgba(200,168,78,0.5)}
 
 /* The Wall — icy blue-black, freezing cold */
 #faq-screen{
@@ -551,6 +715,21 @@ body{
 #faq-screen .faq-question:hover{color:var(--ice-blue)}
 #faq-screen .chapter-title{color:var(--ice-blue)}
 #faq-screen .chapter-title-card{border-color:rgba(91,155,213,0.5)}
+.dice-btn{
+  display:inline-block;font-size:36px;cursor:pointer;
+  transition:transform 0.2s;user-select:none;
+  margin-top:6px;filter:drop-shadow(0 0 8px rgba(91,155,213,0.4));
+}
+.dice-btn:hover{transform:scale(1.2)}
+.dice-btn.rolling{animation:diceRoll 0.6s ease-out}
+@keyframes diceRoll{
+  0%{transform:rotate(0deg) scale(1)}
+  20%{transform:rotate(120deg) scale(1.3)}
+  40%{transform:rotate(240deg) scale(1.1)}
+  60%{transform:rotate(360deg) scale(1.25)}
+  80%{transform:rotate(450deg) scale(1.1)}
+  100%{transform:rotate(720deg) scale(1)}
+}
 
 /* Dragonstone — volcanic green fire + gold celebration */
 #completion-screen{
@@ -734,8 +913,145 @@ body{
     linear-gradient(0deg,#fff 0%,#fff 25%,transparent 25%);
 }
 
+/* Diamond button */
+.diamond-btn{
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:180px;height:180px;
+  transform:rotate(45deg);
+  background:linear-gradient(135deg,#2e7d32,#1b5e20);
+  border:2px solid var(--gold);
+  cursor:pointer;text-decoration:none;
+  box-shadow:0 0 14px rgba(76,175,80,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+  transition:all 0.3s;
+  animation:glowPulse 2.5s ease-in-out infinite;
+}
+.diamond-btn:hover{
+  transform:rotate(45deg) scale(1.08);
+  box-shadow:0 0 24px rgba(76,175,80,0.6),0 0 8px rgba(200,168,78,0.4);
+}
+.diamond-btn-inner{
+  transform:rotate(-45deg);
+  text-align:center;line-height:1.3;
+  font-family:var(--font-pixel);font-size:6px;
+  color:var(--parchment);letter-spacing:0.5px;
+  padding:6px;
+  max-width:140px;
+}
+.diamond-btn-inner .diamond-emoji{font-size:22px;display:block;margin-bottom:4px}
+.diamond-btn-inner .diamond-label{display:block;font-family:var(--font-pixel);font-size:7px;color:var(--parchment);margin-bottom:4px;text-transform:uppercase}
+.diamond-btn-inner .diamond-sub{display:block;font-family:var(--font-medieval);font-size:11px;color:var(--gold-light);font-style:italic;line-height:1.4;margin-top:2px}
+@media(max-width:768px){
+  .diamond-btn{width:120px;height:120px}
+  .diamond-btn-inner{font-size:5px;max-width:90px;padding:4px}
+  .diamond-btn-inner .diamond-emoji{font-size:16px;margin-bottom:2px}
+  .diamond-btn-inner .diamond-label{font-size:5px}
+  .diamond-btn-inner .diamond-sub{font-size:8px}
+}
+
 /* Screen-specific silhouette positioning */
 .screen{position:relative}
+
+/* Kill Some Time button */
+.bookmark-btn{
+  font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
+  color:var(--gold);background:linear-gradient(135deg,#2a2a2a,#1a1a1a);
+  border:2px solid var(--gold);border-radius:6px;
+  padding:12px 24px;cursor:pointer;
+  box-shadow:0 0 10px rgba(200,168,78,0.2),inset 0 1px 0 rgba(255,255,255,0.05);
+  transition:all 0.3s;margin-top:8px;
+}
+.bookmark-btn:hover{
+  background:linear-gradient(135deg,#3a3a2a,#2a2a1a);
+  box-shadow:0 0 20px rgba(200,168,78,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+  transform:scale(1.05);color:var(--gold-light);
+}
+
+.bookmark-toast{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);
+  background:linear-gradient(135deg,#1a1a1a,#0d0d0d);
+  border:2px solid var(--gold);border-radius:8px;
+  padding:28px 36px;z-index:10000;text-align:center;
+  box-shadow:0 0 40px rgba(200,168,78,0.3),0 20px 60px rgba(0,0,0,0.8);
+  opacity:0;pointer-events:none;transition:all 0.3s ease;
+  max-width:400px;width:90%;
+}
+.bookmark-toast.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.bookmark-toast-title{font-family:var(--font-medieval);font-size:22px;color:var(--gold);margin-bottom:10px}
+.bookmark-toast-keys{font-family:var(--font-pixel);font-size:14px;color:#fff;margin:14px 0;padding:10px 20px;background:rgba(200,168,78,0.1);border:1px solid var(--gold);border-radius:4px;display:inline-block;letter-spacing:2px}
+.bookmark-toast-hint{font-size:13px;color:#999;margin-top:10px;line-height:1.5}
+.bookmark-toast-close{font-family:var(--font-pixel);font-size:7px;color:var(--gold);background:none;border:1px solid var(--gold);padding:8px 16px;cursor:pointer;border-radius:4px;margin-top:14px;transition:all 0.2s}
+.bookmark-toast-close:hover{background:rgba(200,168,78,0.15)}
+.bookmark-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.bookmark-overlay.show{opacity:1;pointer-events:auto}
+
+.kill-time-btn{
+  font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
+  color:#fff;background:linear-gradient(135deg,#2e7d32,#1b5e20);
+  border:2px solid var(--gold);border-radius:6px;
+  padding:14px 28px;cursor:pointer;
+  box-shadow:0 0 14px rgba(76,175,80,0.35),inset 0 1px 0 rgba(255,255,255,0.1);
+  transition:all 0.3s;
+}
+.kill-time-btn:hover{
+  background:linear-gradient(135deg,#388e3c,#2e7d32);
+  box-shadow:0 0 24px rgba(76,175,80,0.6),inset 0 1px 0 rgba(255,255,255,0.15);
+  transform:scale(1.05);
+}
+
+/* Fire rain intro for FAQ */
+.fire-rain-overlay{
+  position:fixed;inset:0;z-index:5000;
+  background:radial-gradient(ellipse at 50% 60%,#1a0800,#000);
+  display:none;align-items:center;justify-content:center;flex-direction:column;
+  pointer-events:all;
+}
+.fire-rain-overlay.active{display:flex}
+.fire-rain-overlay .fire-emoji{
+  position:absolute;font-size:28px;
+  animation:fireRainFall linear forwards;
+  pointer-events:none;
+}
+@keyframes fireRainFall{
+  0%{transform:translateY(-60px) rotate(0deg);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+.fire-rain-text{
+  font-family:var(--font-medieval);font-size:clamp(28px,6vw,48px);
+  color:var(--gold);text-shadow:0 0 30px rgba(200,100,0,0.8),0 0 60px rgba(200,50,0,0.4);
+  z-index:5001;opacity:0;animation:fireTextReveal 1s ease-out 1.2s forwards;
+  text-align:center;letter-spacing:3px;
+}
+@keyframes fireTextReveal{
+  0%{opacity:0;transform:scale(0.8)}
+  50%{opacity:1;transform:scale(1.05)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+/* Dragon Invaders game overlay */
+.game-overlay{
+  position:fixed;inset:0;z-index:10000;
+  background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;
+}
+.game-overlay.active{display:flex}
+.game-overlay canvas{
+  border:2px solid var(--gold);border-radius:4px;
+  image-rendering:pixelated;
+  max-width:100%;max-height:calc(100vh - 80px);
+}
+.game-hud{
+  display:flex;justify-content:space-between;align-items:center;
+  width:100%;max-width:600px;padding:8px 4px;
+  font-family:var(--font-pixel);font-size:7px;color:var(--gold);letter-spacing:1px;
+}
+.game-close-btn{
+  font-family:var(--font-pixel);font-size:6px;letter-spacing:1px;
+  color:var(--parchment);background:rgba(139,26,26,0.8);
+  border:1px solid var(--gold);border-radius:4px;
+  padding:8px 16px;cursor:pointer;margin-top:8px;
+  transition:all 0.2s;
+}
+.game-close-btn:hover{background:rgba(198,40,40,0.9)}
 </style>
 </head>
 <body>
@@ -782,20 +1098,24 @@ body{
 </div>
 
 <!-- MFG Logo -->
-<img class="mfg-logo" src="mfg%20logo.png" alt="MFG">
+<div class="mfg-logo-group">
+  <img class="mfg-logo" src="mfg%20logo.png" alt="MFG">
+  <span class="version-label">Version 1.5 / February 2026</span>
+</div>
 
 <!-- Tyrion Speech Bubble (Easter Egg) -->
 <div class="tyrion-speech-bubble" id="tyrion-speech-bubble"></div>
 
 <!-- Progress Bar -->
 <div class="progress-bar-container" id="progress-bar">
-  <span class="progress-label" id="progress-label">CH 0/4</span>
+  <span class="progress-label" id="progress-label">CH 0/5</span>
   <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   <div class="castle-towers">
     <div class="castle-tower" style="height:10px"></div>
     <div class="castle-tower" style="height:14px"></div>
     <div class="castle-tower" style="height:18px"></div>
     <div class="castle-tower" style="height:12px"></div>
+    <div class="castle-tower" style="height:16px"></div>
   </div>
   <button class="chapter-select-btn" onclick="toggleChapterMenu()">CHAPTERS</button>
   <button class="chapter-select-btn" id="ungame-btn" onclick="openUngame()" style="display:none;background:var(--crimson);border-color:var(--crimson-light);color:#fff">&#128220; JUST THE FACTS</button>
@@ -805,10 +1125,15 @@ body{
   <button class="chapter-menu-item" onclick="goToScreen('level-1')">Ch I &mdash; Ravens from the Capital</button>
   <button class="chapter-menu-item" onclick="goToScreen('level-2')">Ch II &mdash; Your Sworn Duties</button>
   <button class="chapter-menu-item" onclick="goToScreen('level-3')">Ch III &mdash; The Small Council</button>
-  <button class="chapter-menu-item" onclick="goToScreen('level-4')">Ch IV &mdash; The Forbidden Library</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-4')">Ch IV &mdash; Defining Audience Insights</button>
+  <button class="chapter-menu-item" onclick="goToScreen('level-5')">Ch V &mdash; The Forbidden Library</button>
   <button class="chapter-menu-item" onclick="goToScreen('faq-screen')">FAQs</button>
   <button class="chapter-menu-item" onclick="goToScreen('completion-screen')">Completion</button>
 </div>
+
+<!-- FIXED SIDE NAV BUTTONS -->
+<button class="nav-btn screen-nav-back" id="fixed-nav-back" style="display:none" onclick="navBack()">&#9664; BACK</button>
+<button class="cta-btn screen-nav-fwd" id="fixed-nav-fwd" style="display:none" onclick="navFwd()">CONTINUE &#9654;</button>
 
 <!-- ====== SLIDER ====== -->
 <div class="slider" id="slider">
@@ -846,7 +1171,7 @@ body{
       <h3>REALM GLOSSARY</h3>
       <div class="legend-grid">
         <div class="legend-item">🏰 <span class="got-term">Great Houses</span> <span class="real-term">= Google's PAs</span></div>
-        <div class="legend-item">🗺️ <span class="got-term">Domains</span> <span class="real-term">= Audiences &amp; messaging</span></div>
+        <div class="legend-item">🗺️ <span class="got-term">Domains</span> <span class="real-term">= Cultural contexts, moments, IP, wherever Google can show up and/or buy media</span></div>
         <div class="legend-item">🌍 <span class="got-term">The Realm</span> <span class="real-term">= Google media landscape</span></div>
         <div class="legend-item">👑 <span class="got-term">The Hand</span> <span class="real-term">= Global coordinator (Ed)</span></div>
         <div class="legend-item">⚔️ <span class="got-term">Wardens</span> <span class="real-term">= Regional leads</span></div>
@@ -855,6 +1180,7 @@ body{
     </div>
 
     <button class="cta-btn" onclick="startQuest()">BEGIN YOUR QUEST</button>
+    <div><button class="bookmark-btn" onclick="showBookmarkPrompt()">⭐ BOOKMARK THIS!</button></div>
     <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
@@ -864,9 +1190,8 @@ body{
   <div class="screen-glow fire"></div>
   <div class="screen-inner" style="position:relative;z-index:1">
     <div class="chapter-title-card">
-      <span class="chapter-num">CHAPTER 1 OF 4</span>
+      <span class="chapter-num">CHAPTER 1 OF 5</span>
       <div class="chapter-title">Ravens from the Capital</div>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🏰 THE RED KEEP</div>
     </div>
 
     <div class="two-col mb-sm" style="flex:1;min-height:0">
@@ -935,9 +1260,8 @@ body{
   <div class="screen-glow gold"></div>
   <div class="screen-inner" style="position:relative;z-index:1">
     <div class="chapter-title-card">
-      <span class="chapter-num">CHAPTER 2 OF 4</span>
+      <span class="chapter-num">CHAPTER 2 OF 5</span>
       <div class="chapter-title">Your Sworn Duties</div>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🦁 CASTERLY ROCK</div>
     </div>
 
     <div class="two-col mb-sm" style="flex:1;min-height:0">
@@ -994,6 +1318,13 @@ body{
       </div>
     </div>
 
+    <div style="margin-bottom:12px">
+      <div style="font-family:var(--font-medieval);font-size:17px;color:var(--gold);margin-bottom:8px;text-align:center">📋 Tyrion Slide Template <span style="font-size:12px;color:#aaa;font-family:var(--font-body)">(click to enlarge)</span></div>
+      <div style="text-align:center">
+        <img class="zoomable-img" src="template.png" alt="Tyrion slide template showing how to fill in your region's domains" onclick="openLightbox(this.src)" style="max-width:100%;max-height:400px;object-fit:contain;border:2px solid var(--gold);border-radius:4px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+      </div>
+    </div>
+
     <div class="plain-box mb-sm">
       <span class="plain-box-label">BOTTOM LINE</span>
       <p>You have two jobs: <strong>(1)</strong> Update the Tyrion deck at least monthly. <strong>(2)</strong> Include Tyrion in your PA meetings and decks. The goal is visibility, not policing.</p>
@@ -1012,14 +1343,13 @@ body{
   </div>
 </div>
 
-<!-- LEVEL 3 -->
+<!-- LEVEL 3 — The Small Council -->
 <div class="screen" id="level-3">
   <div class="screen-glow ice"></div>
   <div class="screen-inner" style="position:relative;z-index:1">
     <div class="chapter-title-card">
-      <span class="chapter-num">CHAPTER 3 OF 4</span>
+      <span class="chapter-num">CHAPTER 3 OF 5</span>
       <div class="chapter-title">The Small Council</div>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">🐺 WINTERFELL</div>
     </div>
 
     <div class="hand-card mb-sm">
@@ -1081,7 +1411,7 @@ body{
       <h3>3. 📋 How It Works</h3>
       <ol>
         <li>💬 Ed sets up a group chat with the lead strategist, planner, and CS in each region.</li>
-        <li>🔄 Each region updates Tyrion <strong>at least once a month</strong>.</li>
+        <li>🔄 Each region updates Tyrion as proposals are being made, decisions are approved &mdash; <strong>at least once a month</strong>.</li>
         <li>🤝 Ed runs <strong>one</strong> kick-off meeting with all regional leads.</li>
         <li>👤 For follow-ups, only send 1&ndash;2 people. Keep it lean.</li>
       </ol>
@@ -1100,14 +1430,63 @@ body{
   </div>
 </div>
 
-<!-- LEVEL 4 -->
+<!-- LEVEL 4 — Audience Insights -->
 <div class="screen" id="level-4">
+  <div class="screen-glow fire"></div>
+  <div class="screen-inner" style="position:relative;z-index:1">
+    <div class="chapter-title-card">
+      <span class="chapter-num">CHAPTER 4 OF 5</span>
+      <div class="chapter-title">Defining Audience Insights</div>
+    </div>
+
+    <div class="dialogue-box mb-sm">
+      <span class="speaker">TYRION</span>
+      <p>To map the realm properly, you must first understand the people who live in it. Here's how we define audience insights across PA domains.</p>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div style="font-family:var(--font-medieval);font-size:17px;color:var(--gold);margin-bottom:8px;text-align:center">📊 Audience Insights Framework <span style="font-size:12px;color:#aaa;font-family:var(--font-body)">(click to enlarge)</span></div>
+      <div class="diamond-img-row" style="display:flex;align-items:center;justify-content:center;gap:48px">
+        <img class="zoomable-img" src="audience.png" alt="Audience Insights framework for defining PA domains" onclick="openLightbox(this.src)" style="max-width:calc(100% - 220px);max-height:360px;object-fit:contain;flex:1;min-width:0">
+        <a class="diamond-btn" href="https://docs.google.com/presentation/d/122cSFnzsqfYgg5BKVIBFY9XP1qc6SggQc0u7g-Ivn4k/edit?slide=id.g3c40b1e79e8_0_320#slide=id.g3c40b1e79e8_0_320" target="_blank" rel="noopener" title="Extra Credit: Audience Delivery Analysis">
+          <div class="diamond-btn-inner">
+            <span class="diamond-emoji">🥶</span>
+            <span class="diamond-label">EXTRA CREDIT: HOW TO PLAN AUDIENCE DELIVERY ANALYSIS</span>
+            <span class="diamond-sub">A bonus quest beyond the realm's borders — for those who wish to master delivery.</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:12px">
+      <div style="font-family:var(--font-medieval);font-size:17px;color:var(--gold);margin-bottom:8px">🎬 Watch: Audience Insights Walkthrough</div>
+      <a href="https://drive.google.com/file/d/1Tk8xcYswCneNwZ44m1H95rbYDWPBQ5Ab/view?usp=sharing" target="_blank" rel="noopener" style="display:block;max-width:720px;margin:0 auto;border:2px solid var(--gold);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.5);overflow:hidden;text-decoration:none;transition:all 0.3s;background:linear-gradient(135deg,#1a1210,#0d0a08);padding:40px 20px;cursor:pointer" onmouseover="this.style.boxShadow='0 4px 30px rgba(200,168,78,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.5)';this.style.transform='none'">
+        <div style="font-size:64px;margin-bottom:12px">▶️</div>
+        <div style="font-family:var(--font-pixel);font-size:9px;color:var(--gold);letter-spacing:1px">CLICK TO WATCH VIDEO</div>
+        <div style="font-size:13px;color:#999;margin-top:6px">Opens in Google Drive</div>
+      </a>
+    </div>
+
+    <div class="plain-box mb-sm">
+      <span class="plain-box-label">BOTTOM LINE</span>
+      <p>Audience insights are the foundation of every domain. Understanding who you're reaching — and where they overlap with other PAs — is how Tyrion creates real visibility.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" onclick="goToScreen('level-3')">&#9664; BACK</button>
+      <button class="cta-btn" onclick="goToScreen('level-5')">CONTINUE &#9654;</button>
+    </div>
+    <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
+  </div>
+</div>
+
+<!-- LEVEL 5 — The Forbidden Library (was Level 4) -->
+<div class="screen" id="level-5">
   <div class="screen-glow gold"></div>
   <div class="screen-inner" style="justify-content:center;position:relative;z-index:1">
     <div class="chapter-title-card">
-      <span class="chapter-num">CHAPTER 4 OF 4 &mdash; BONUS</span>
+      <span class="chapter-num">CHAPTER 5 OF 5 &mdash; BONUS</span>
       <div class="chapter-title">The Forbidden Library</div>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--stone-light);margin-top:3px;letter-spacing:1px">📜 THE CITADEL, OLDTOWN</div>
     </div>
 
     <div class="dialogue-box mb-md">
@@ -1128,10 +1507,16 @@ body{
         <p>How Japan sorted out PA domains in their annual planning &mdash; a real-world example.</p>
         <a class="deck-link" href="https://docs.google.com/presentation/d/1eNCBGslblRU9SRMSNQlKFadzntub72Mo4xbygVaXXck/edit?slide=id.g3be4aba2c55_0_1817#slide=id.g3be4aba2c55_0_1817" target="_blank" rel="noopener">📜 OPEN JAPAN PLANNING</a>
       </div>
+      <div class="tome">
+        <span class="tome-icon">💎</span>
+        <h4>3. Big Gemini Deck with Creative Ideas</h4>
+        <p>A comprehensive creative deck exploring big ideas for the Gemini campaign.</p>
+        <a class="deck-link" href="https://docs.google.com/presentation/d/1TSEDogxKLQmJPqAc44gZ_eq8-IajedvdlKswM33vvt8/edit?usp=sharing" target="_blank" rel="noopener">📜 OPEN GEMINI DECK</a>
+      </div>
     </div>
 
     <div class="nav-row">
-      <button class="nav-btn" onclick="goToScreen('level-3')">&#9664; BACK</button>
+      <button class="nav-btn" onclick="goToScreen('level-4')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('faq-screen')">CONTINUE &#9654;</button>
     </div>
     <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
@@ -1143,19 +1528,19 @@ body{
   <div class="screen-glow ice"></div>
   <div class="screen-inner" style="position:relative;z-index:1">
     <div class="chapter-title-card">
-      <span class="chapter-num">CHAPTER 5</span>
+      <span class="chapter-num">CHAPTER 6</span>
       <div class="chapter-title">FAQs</div>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--ice-blue);margin-top:3px;letter-spacing:1px">🧊 THE WALL &mdash; CASTLE BLACK</div>
+      <div class="dice-btn" id="faq-dice" onclick="rollFaqDice()" title="Roll the dice for a random FAQ!">🎲</div>
     </div>
 
-    <div class="faq-grid mb-sm">
+    <div class="faq-grid mb-sm" id="faq-grid">
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>❓ What is a "domain" in Tyrion?</span><span class="faq-arrow">&#9660;</span></button>
         <div class="faq-answer"><div class="faq-answer-inner">A domain is a <strong>context, moment, passion point, or IP</strong> where Google can show up and/or buy media. Think of it as any space where a PA is active &mdash; whether that's a cultural moment like the Super Bowl, a passion point like gaming, or a partnership with a specific publisher. Tyrion maps every PA's domains so the whole team can see where they overlap.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>📅 How often do I update the deck?</span><span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-answer"><div class="faq-answer-inner">Update <strong>as soon as decisions are made and domains are locked</strong> &mdash; don't wait for a monthly cadence if things change sooner. At minimum, review your slides once a month to make sure nothing is stale. Always leave a comment on your slide explaining what changed and why, so others can follow the history.</div></div>
+        <div class="faq-answer"><div class="faq-answer-inner">Update <strong>as soon as MFG proposals are made and decisions are locked</strong> &mdash; don't wait for a monthly cadence if things change sooner. At minimum, review your slides once a month to make sure nothing is stale. Always leave a comment on your slide explaining what changed and why, so others can follow the history.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)"><span>🟢 What does the green shading mean?</span><span class="faq-arrow">&#9660;</span></button>
@@ -1189,6 +1574,14 @@ body{
         <button class="faq-question" onclick="toggleFaq(this)"><span>🗺️ Where do I start with my region?</span><span class="faq-arrow">&#9660;</span></button>
         <div class="faq-answer"><div class="faq-answer-inner">Start by opening the Tyrion deck and finding your region's slides. Identify the PAs you work on and list out their domains &mdash; the contexts, moments, passion points, and IPs where that PA shows up or buys media. If the slides are empty, that's OK &mdash; you're building the map from scratch. Talk to your accountable lead to align on how to fill it in, and don't forget to use the green shading to show relative investment level.</div></div>
       </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>👥 What are audience insights and why do they matter?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Audience insights are the foundation of every domain in Tyrion. They help you understand <strong>who you're reaching</strong> within each domain and where audiences overlap across PAs. By defining audience insights, you create visibility into whether two PAs are targeting the same people in the same space &mdash; which could be a strategic opportunity or something that needs coordination. Think of it as the "people layer" on top of the domain map.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)"><span>📊 How do I define audience insights for my domains?</span><span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Refer to the <strong>Audience Insights Framework</strong> in Chapter 4. Start by identifying the key audience segments for each PA domain you manage. Map out who the PA is trying to reach, what their media behaviors look like, and where those audiences intersect with other PAs' domains. If you want to go deeper, the <strong>Extra Credit</strong> section in Chapter 4 walks through how to plan audience delivery analysis.</div></div>
+      </div>
     </div>
 
     <div style="text-align:center;padding-top:8px">
@@ -1196,7 +1589,7 @@ body{
     </div>
 
     <div class="nav-row">
-      <button class="nav-btn" onclick="goToScreen('level-4')">&#9664; BACK</button>
+      <button class="nav-btn" onclick="goToScreen('level-5')">&#9664; BACK</button>
       <button class="cta-btn" onclick="goToScreen('completion-screen')">COMPLETE EXPLAINER &#9654;</button>
     </div>
     <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
@@ -1212,7 +1605,6 @@ body{
       <div class="badge">🦁</div>
       <div class="completion-title">You Have Served the Realm</div>
       <p style="color:var(--gold-light);font-family:var(--font-medieval);font-size:16px;margin:4px 0 4px">Knight of the Tyrion Order</p>
-      <div style="font-family:var(--font-pixel);font-size:5px;color:var(--crimson-light);letter-spacing:1px;margin-bottom:8px;opacity:0.7">🐲 DRAGONSTONE</div>
     </div>
 
     <div class="dialogue-box-with-char mb-md" style="justify-content:center;max-width:600px">
@@ -1243,6 +1635,9 @@ body{
     <div style="margin-top:16px">
       <button class="cta-btn" onclick="goToScreen('start-screen')">RETURN TO THE THRONE ROOM</button>
     </div>
+    <div style="margin-top:10px">
+      <button class="kill-time-btn" onclick="openDragonGame()">🐲 KILL SOME TIME</button>
+    </div>
     <div class="internal-disclaimer">*THIS EXPLAINER IS INTERNAL USE ONLY*</div>
   </div>
 </div>
@@ -1268,6 +1663,20 @@ body{
 <div class="wall-decorations" id="wall-decorations"></div>
 
 <!-- LIGHTBOX OVERLAY -->
+<!-- FIRE RAIN INTRO -->
+<div class="fire-rain-overlay" id="fire-rain-overlay">
+  <div class="fire-rain-text">🔥 OH FOR FAQS SAKE!!! 🔥</div>
+</div>
+
+<!-- BOOKMARK TOAST -->
+<div class="bookmark-overlay" id="bookmark-overlay" onclick="closeBookmarkPrompt()"></div>
+<div class="bookmark-toast" id="bookmark-toast">
+  <div class="bookmark-toast-title">⭐ Bookmark This Page</div>
+  <div id="bookmark-keys" class="bookmark-toast-keys"></div>
+  <div class="bookmark-toast-hint">Press the keys above to save this page to your bookmarks so you can return anytime!</div>
+  <button class="bookmark-toast-close" onclick="closeBookmarkPrompt()">GOT IT</button>
+</div>
+
 <div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
   <img src="" alt="Zoomed view">
@@ -1301,6 +1710,16 @@ body{
     </ul>
     <p><strong>Remember:</strong> The goal is VISIBILITY, not policing Google.</p>
 
+    <h2>Defining Audience Insights</h2>
+    <p>Audience insights are the foundation of every domain in Tyrion. They help you understand <strong>who you're reaching</strong> within each domain and where audiences overlap across PAs.</p>
+    <ul>
+      <li>For each PA domain you manage, identify the key audience segments you're targeting.</li>
+      <li>Map out who the PA is trying to reach, what their media behaviors look like, and where those audiences intersect with other PAs' domains.</li>
+      <li>Understanding audience overlap helps determine whether two PAs in the same space is a strategic opportunity or something that needs coordination.</li>
+      <li>Think of audience insights as the "people layer" on top of the domain map.</li>
+    </ul>
+    <p><strong>Extra Credit:</strong> For a deeper dive on audience delivery analysis, see the <a href="https://docs.google.com/presentation/d/122cSFnzsqfYgg5BKVIBFY9XP1qc6SggQc0u7g-Ivn4k/edit?slide=id.g3c40b1e79e8_0_320#slide=id.g3c40b1e79e8_0_320" target="_blank" rel="noopener" style="color:#8b1a1a;font-weight:600">Audience Delivery Analysis deck</a>.</p>
+
     <h2>Who Is Responsible</h2>
     <p><strong>Global Coordinator:</strong> Ed</p>
     <h3>Regional Teams:</h3>
@@ -1326,10 +1745,21 @@ body{
   </div>
 </div>
 
+<!-- DRAGON INVADERS GAME -->
+<div class="game-overlay" id="game-overlay">
+  <div class="game-hud">
+    <span id="game-score">SCORE: 0</span>
+    <span id="game-lives">LIVES: 3</span>
+    <span id="game-wave">WAVE: 1</span>
+  </div>
+  <canvas id="game-canvas" width="600" height="500"></canvas>
+  <button class="game-close-btn" onclick="closeDragonGame()">&#9664; RETURN TO THE REALM</button>
+</div>
+
 <script>
 (function(){
-  const screenOrder = ['start-screen','level-1','level-2','level-3','level-4','faq-screen','completion-screen'];
-  const chapterScreens = ['level-1','level-2','level-3','level-4'];
+  const screenOrder = ['start-screen','level-1','level-2','level-3','level-4','level-5','faq-screen','completion-screen'];
+  const chapterScreens = ['level-1','level-2','level-3','level-4','level-5'];
   let currentScreen = 'start-screen';
   let currentIndex = 0;
   let highestReached = 0;
@@ -1339,6 +1769,37 @@ body{
     flyRaven();
     goToScreen('level-1');
   };
+
+  var fixedBack = document.getElementById('fixed-nav-back');
+  var fixedFwd = document.getElementById('fixed-nav-fwd');
+
+  window.navBack = function(){
+    if(currentIndex > 0) goToScreen(screenOrder[currentIndex - 1]);
+  };
+  window.navFwd = function(){
+    if(currentIndex < screenOrder.length - 1) goToScreen(screenOrder[currentIndex + 1]);
+  };
+
+  function updateFixedNav(id, idx){
+    // Hide both on start and completion (completion has its own buttons)
+    if(id === 'start-screen' || id === 'completion-screen'){
+      fixedBack.style.display = 'none';
+      fixedFwd.style.display = 'none';
+    } else {
+      fixedBack.style.display = '';
+      fixedFwd.style.display = '';
+    }
+    // Hide back on first chapter
+    if(id === 'level-1'){
+      fixedBack.style.display = 'none';
+    }
+    // Update button labels for special screens
+    if(id === 'faq-screen'){
+      fixedFwd.textContent = 'COMPLETE EXPLAINER \u25B6';
+    } else {
+      fixedFwd.textContent = 'CONTINUE \u25B6';
+    }
+  }
 
   window.goToScreen = function(id){
     document.getElementById('chapter-menu').classList.remove('open');
@@ -1351,6 +1812,7 @@ body{
     currentIndex = idx;
     if(idx > highestReached) highestReached = idx;
     updateProgress(idx);
+    updateFixedNav(id, idx);
     const bar = document.getElementById('progress-bar');
     const ungameBtn = document.getElementById('ungame-btn');
     if(id === 'start-screen'){
@@ -1368,7 +1830,7 @@ body{
     document.getElementById('progress-fill').style.width = progress + '%';
     const chapterIdx = chapterScreens.indexOf(currentScreen);
     if(chapterIdx >= 0){
-      document.getElementById('progress-label').textContent = 'CH ' + (chapterIdx+1) + '/4';
+      document.getElementById('progress-label').textContent = 'CH ' + (chapterIdx+1) + '/5';
     } else if(currentScreen === 'faq-screen'){
       document.getElementById('progress-label').textContent = 'FAQ';
     } else if(currentScreen === 'completion-screen'){
@@ -1419,6 +1881,34 @@ body{
     if(!wasOpen) item.classList.add('open');
   };
 
+  // Dice roll — random FAQ (no repeats until all seen)
+  var diceOpened = [];
+  window.rollFaqDice = function(){
+    var dice = document.getElementById('faq-dice');
+    var items = Array.from(document.querySelectorAll('#faq-grid .faq-item'));
+    if(!items.length) return;
+    // Reset pool if all have been opened
+    if(diceOpened.length >= items.length) diceOpened = [];
+    // Build list of unopened indices
+    var available = [];
+    for(var i = 0; i < items.length; i++){
+      if(diceOpened.indexOf(i) === -1) available.push(i);
+    }
+    // Start rolling animation
+    dice.classList.remove('rolling');
+    void dice.offsetWidth;
+    dice.classList.add('rolling');
+    // Close all FAQs first
+    items.forEach(function(f){ f.classList.remove('open'); });
+    // After animation, open a random unopened one
+    setTimeout(function(){
+      var pick = available[Math.floor(Math.random() * available.length)];
+      diceOpened.push(pick);
+      items[pick].classList.add('open');
+      items[pick].scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 650);
+  };
+
   window.openUngame = function(){
     document.getElementById('ungame-overlay').classList.add('active');
   };
@@ -1434,6 +1924,19 @@ body{
   };
   window.closeLightbox = function(){
     document.getElementById('lightbox-overlay').classList.remove('active');
+  };
+
+  // Bookmark prompt
+  window.showBookmarkPrompt = function(){
+    var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.indexOf('Mac') >= 0;
+    var keys = isMac ? '⌘ Cmd + D' : 'Ctrl + D';
+    document.getElementById('bookmark-keys').textContent = keys;
+    document.getElementById('bookmark-overlay').classList.add('show');
+    document.getElementById('bookmark-toast').classList.add('show');
+  };
+  window.closeBookmarkPrompt = function(){
+    document.getElementById('bookmark-overlay').classList.remove('show');
+    document.getElementById('bookmark-toast').classList.remove('show');
   };
 
   // Fireworks
@@ -1454,6 +1957,11 @@ body{
 
   // Keyboard: arrow keys for navigation, Escape for overlays
   document.addEventListener('keydown', function(e){
+    // If dragon game is open, let the game handle keys
+    if(document.getElementById('game-overlay').classList.contains('active')){
+      if(e.key === 'Escape') closeDragonGame();
+      return;
+    }
     if(e.key === 'Escape'){
       closeLightbox();
       closeUngame();
@@ -1579,6 +2087,11 @@ body{
         wallDecorations.classList.add('ice');
         break;
       case 'level-4':
+        // Harrenhal: scorched embers, warm torches
+        emberContainer.style.display = 'block';
+        wallDecorations.classList.add('visible');
+        break;
+      case 'level-5':
         // The Citadel: dust motes, candlelight, warm & quiet
         dustContainer.classList.add('active');
         wallDecorations.classList.add('visible');
@@ -1636,10 +2149,51 @@ body{
     setTimeout(function(){ dragon.classList.remove('flying'); clearInterval(trailInterval); }, 3200);
   };
 
+  // Fire rain intro for FAQ screen
+  var fireRainPlayed = false;
+  function playFireRain(callback){
+    var overlay = document.getElementById('fire-rain-overlay');
+    overlay.classList.add('active');
+    var fireEmojis = ['🔥','🔥','🔥','🔥','🔥','☄️','💥','🔥','🔥','🔥'];
+    var spawned = 0;
+    var totalEmojis = 50;
+    var spawnInterval = setInterval(function(){
+      if(spawned >= totalEmojis){ clearInterval(spawnInterval); return; }
+      var em = document.createElement('div');
+      em.className = 'fire-emoji';
+      em.textContent = fireEmojis[Math.floor(Math.random() * fireEmojis.length)];
+      em.style.left = (Math.random() * 100) + '%';
+      em.style.fontSize = (20 + Math.random() * 24) + 'px';
+      var dur = 1 + Math.random() * 1.2;
+      em.style.animationDuration = dur + 's';
+      overlay.appendChild(em);
+      spawned++;
+      setTimeout(function(){ if(em.parentNode) em.parentNode.removeChild(em); }, dur * 1000 + 100);
+    }, 40);
+    setTimeout(function(){
+      overlay.classList.remove('active');
+      // Clean up any remaining emojis
+      overlay.querySelectorAll('.fire-emoji').forEach(function(e){ e.remove(); });
+      if(callback) callback();
+    }, 2800);
+  }
+
   // Wrap goToScreen for environments + dragon + companion
   var origGoToScreen = window.goToScreen;
   var transitionCount = 0;
   window.goToScreen = function(id){
+    // Fire rain intro on first visit to FAQ
+    if(id === 'faq-screen' && !fireRainPlayed){
+      fireRainPlayed = true;
+      playFireRain(function(){
+        origGoToScreen(id);
+        transitionCount++;
+        setEnvironment(id);
+        companion.classList.add('visible');
+      });
+      return;
+    }
+
     origGoToScreen(id);
     transitionCount++;
 
@@ -1730,14 +2284,26 @@ body{
   var tyrionQuotes = [
     "I drink and I know things.",
     "Never forget what you are. The rest of the world will not. Wear it like armor, and it can never be used to hurt you.",
-    "A mind needs books like a sword needs a whetstone.",
+    "A mind needs books like a sword needs a whetstone, if it is to keep its edge.",
     "I have a tender spot in my heart for cripples, bastards, and broken things.",
     "It\u2019s hard to put a leash on a dog once you\u2019ve put a crown on its head.",
-    "That\u2019s what I do. I drink and I know things.",
     "A Lannister always pays his debts.",
-    "Death is so final, whereas life\u2026 ah, life is full of possibilities.",
+    "Death is so terribly final, while life is full of possibilities.",
     "Everything\u2019s better with some wine in the belly.",
-    "Let me give you some advice, bastard. Never forget what you are. The rest of the world will not."
+    "It\u2019s not easy being drunk all the time. If it were easy, everyone would do it.",
+    "I\u2019m not questioning your honor, Lord Janos. I\u2019m denying its existence.",
+    "Once you\u2019ve accepted your flaws, no one can use them against you.",
+    "The powerful have always preyed on the powerless. That\u2019s how they became powerful in the first place.",
+    "I try to know as many people as I can. You never know which one you\u2019ll need.",
+    "When you tear out a man\u2019s tongue, you are not proving him a liar \u2014 you\u2019re only telling the world that you fear what he might say.",
+    "In my experience, eloquent men are right every bit as often as imbeciles.",
+    "I\u2019m guilty of being a dwarf. I\u2019ve been on trial for that my entire life.",
+    "Every time we deal with an enemy, we create two more.",
+    "Why is it that when one man builds a wall, the next man immediately needs to know what\u2019s on the other side?",
+    "No one mind me. All dwarfs are bastards in their father\u2019s eyes.",
+    "There is nothing more powerful than a good story. Nothing can stop it. No enemy can defeat it.",
+    "My brother has his sword, King Robert has his warhammer, and I have my mind.",
+    "I will hurt you for this. A day will come when you think you are safe and happy, and your joy will turn to ashes in your mouth."
   ];
   var quoteIndex = 0;
   var speechBubble = document.getElementById('tyrion-speech-bubble');
@@ -1755,15 +2321,412 @@ body{
     }, 5000);
   }
 
-  // Click to show quote
-  companion.addEventListener('click', showTyrionQuote);
+  // Click companion to open YouTube link
+  companion.addEventListener('click', function(){
+    window.open('https://www.youtube.com/watch?v=hYwm8tzH7cc','_blank');
+  });
 
-  // Auto-show a quote every 20 seconds (only when companion is visible)
+  // Make all pixel-tyrion elements clickable
+  document.querySelectorAll('.pixel-tyrion').forEach(function(el){
+    el.style.cursor = 'pointer';
+    el.title = 'Click to meet Tyrion!';
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      window.open('https://www.youtube.com/watch?v=hYwm8tzH7cc','_blank');
+    });
+  });
+
+  // Auto-show a quote every 10 seconds (only when companion is visible)
   setInterval(function(){
     if(companion.classList.contains('visible') && !speechBubble.classList.contains('show')){
       showTyrionQuote();
     }
-  }, 20000);
+  }, 10000);
+
+  // ===== DRAGON INVADERS GAME =====
+  var gameRunning = false;
+  var gameAnimFrame = null;
+
+  window.openDragonGame = function(){
+    document.getElementById('game-overlay').classList.add('active');
+    startDragonGame();
+  };
+  window.closeDragonGame = function(){
+    document.getElementById('game-overlay').classList.remove('active');
+    gameRunning = false;
+    if(gameAnimFrame) cancelAnimationFrame(gameAnimFrame);
+  };
+
+  function startDragonGame(){
+    var canvas = document.getElementById('game-canvas');
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+
+    var score = 0;
+    var lives = 3;
+    var wave = 1;
+    var gameOver = false;
+    gameRunning = true;
+
+    // Player (Tyrion)
+    var player = {x: W/2 - 16, y: H - 44, w: 32, h: 36, speed: 5};
+    var bullets = [];
+    var dragonBullets = [];
+    var particles = [];
+
+    // Keys
+    var keys = {};
+    function onKey(e){
+      if(!gameRunning) return;
+      keys[e.key] = e.type === 'keydown';
+      if(e.key === ' ' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') e.preventDefault();
+    }
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('keyup', onKey);
+
+    // Touch controls
+    var touchLeft = false, touchRight = false, touchShoot = false;
+    canvas.addEventListener('touchstart', function(e){
+      e.preventDefault();
+      for(var i=0;i<e.touches.length;i++){
+        var tx = e.touches[i].clientX - canvas.getBoundingClientRect().left;
+        var ty = e.touches[i].clientY - canvas.getBoundingClientRect().top;
+        if(ty > H * 0.7){ touchShoot = true; }
+        if(tx < W/3) touchLeft = true;
+        else if(tx > W*2/3) touchRight = true;
+        else touchShoot = true;
+      }
+    });
+    canvas.addEventListener('touchend', function(e){
+      e.preventDefault();
+      touchLeft = false; touchRight = false; touchShoot = false;
+    });
+
+    // Dragons (enemies)
+    var dragons = [];
+    var dragonDir = 1;
+    var dragonSpeed = 1;
+    var dropAmount = 18;
+    var shootTimer = 0;
+
+    function spawnWave(){
+      dragons = [];
+      var rows = Math.min(3 + Math.floor(wave/2), 6);
+      var cols = Math.min(6 + Math.floor(wave/3), 10);
+      for(var r=0;r<rows;r++){
+        for(var c=0;c<cols;c++){
+          dragons.push({
+            x: 40 + c * 52,
+            y: 30 + r * 40,
+            w: 32, h: 28,
+            alive: true,
+            frame: 0,
+            type: r === 0 ? 2 : (r < 2 ? 1 : 0) // top row = big dragon
+          });
+        }
+      }
+      dragonDir = 1;
+      dragonSpeed = 0.6 + wave * 0.2;
+    }
+    spawnWave();
+
+    // Draw pixel Tyrion (player ship)
+    function drawTyrion(x, y){
+      var s = 2; // scale
+      ctx.fillStyle = '#c8a84e'; // gold hair
+      ctx.fillRect(x+5*s,y+0*s,6*s,3*s);
+      ctx.fillRect(x+4*s,y+1*s,1*s,3*s);
+      ctx.fillRect(x+11*s,y+1*s,1*s,3*s);
+
+      ctx.fillStyle = '#e8b88a'; // face
+      ctx.fillRect(x+5*s,y+3*s,6*s,4*s);
+      ctx.fillStyle = '#333'; // eyes
+      ctx.fillRect(x+6*s,y+4*s,1*s,1*s);
+      ctx.fillRect(x+9*s,y+4*s,1*s,1*s);
+      ctx.fillStyle = '#c77'; // mouth
+      ctx.fillRect(x+7*s,y+6*s,2*s,1*s);
+
+      ctx.fillStyle = '#8b1a1a'; // crimson tunic
+      ctx.fillRect(x+4*s,y+7*s,8*s,5*s);
+      ctx.fillStyle = '#a52a2a';
+      ctx.fillRect(x+5*s,y+7*s,6*s,1*s);
+      ctx.fillStyle = '#c8a84e'; // belt
+      ctx.fillRect(x+4*s,y+10*s,8*s,1*s);
+
+      ctx.fillStyle = '#4a3728'; // boots
+      ctx.fillRect(x+5*s,y+12*s,2*s,2*s);
+      ctx.fillRect(x+9*s,y+12*s,2*s,2*s);
+
+      // Wine goblet (weapon!)
+      ctx.fillStyle = '#c8a84e';
+      ctx.fillRect(x+12*s,y+7*s,3*s,1*s);
+      ctx.fillRect(x+12*s,y+8*s,2*s,1*s);
+      ctx.fillStyle = '#722';
+      ctx.fillRect(x+13*s,y+6*s,1*s,1*s);
+    }
+
+    // Draw dragon enemy
+    function drawDragon(d){
+      var x = d.x, y = d.y;
+      var colors = ['#2e7d32','#c62828','#5b3a8c']; // green, red, purple
+      var main = colors[d.type] || '#2e7d32';
+      var wing = d.frame % 2 === 0;
+
+      // Body
+      ctx.fillStyle = main;
+      ctx.fillRect(x+10,y+8,12,12);
+      // Head
+      ctx.fillRect(x+20,y+4,8,10);
+      // Eye
+      ctx.fillStyle = '#ff0';
+      ctx.fillRect(x+24,y+6,2,2);
+      // Mouth / fire
+      ctx.fillStyle = '#f90';
+      ctx.fillRect(x+28,y+9,4,3);
+      ctx.fillStyle = '#f00';
+      ctx.fillRect(x+30,y+10,3,1);
+      // Wings
+      ctx.fillStyle = main;
+      if(wing){
+        ctx.fillRect(x+4,y+2,8,6);
+        ctx.fillRect(x+0,y+4,6,3);
+      } else {
+        ctx.fillRect(x+4,y+10,8,6);
+        ctx.fillRect(x+0,y+12,6,3);
+      }
+      // Tail
+      ctx.fillRect(x+2,y+12,8,4);
+      ctx.fillRect(x+0,y+14,4,3);
+      // Legs
+      ctx.fillStyle = '#333';
+      ctx.fillRect(x+12,y+20,3,4);
+      ctx.fillRect(x+18,y+20,3,4);
+    }
+
+    // Spawn particles
+    function spawnExplosion(x,y,color){
+      for(var i=0;i<12;i++){
+        particles.push({
+          x:x, y:y,
+          vx:(Math.random()-0.5)*4,
+          vy:(Math.random()-0.5)*4,
+          life:30+Math.random()*20,
+          color:color,
+          size:2+Math.random()*3
+        });
+      }
+    }
+
+    var shootCooldown = 0;
+
+    function update(){
+      if(gameOver) return;
+
+      // Player movement
+      if(keys['ArrowLeft'] || keys['a'] || touchLeft) player.x -= player.speed;
+      if(keys['ArrowRight'] || keys['d'] || touchRight) player.x += player.speed;
+      if(player.x < 0) player.x = 0;
+      if(player.x > W - player.w) player.x = W - player.w;
+
+      // Shoot
+      shootCooldown--;
+      if((keys[' '] || touchShoot) && shootCooldown <= 0){
+        bullets.push({x: player.x + player.w/2 - 2, y: player.y - 4, w:4, h:8});
+        shootCooldown = 12;
+      }
+
+      // Update bullets
+      for(var i=bullets.length-1;i>=0;i--){
+        bullets[i].y -= 7;
+        if(bullets[i].y < -10) bullets.splice(i,1);
+      }
+
+      // Dragon movement
+      var edgeHit = false;
+      for(var i=0;i<dragons.length;i++){
+        if(!dragons[i].alive) continue;
+        if((dragons[i].x + dragons[i].w + dragonSpeed * dragonDir > W - 5) ||
+           (dragons[i].x + dragonSpeed * dragonDir < 5)){
+          edgeHit = true;
+          break;
+        }
+      }
+      if(edgeHit){
+        dragonDir *= -1;
+        for(var i=0;i<dragons.length;i++){
+          if(dragons[i].alive) dragons[i].y += dropAmount;
+        }
+      } else {
+        for(var i=0;i<dragons.length;i++){
+          if(dragons[i].alive) dragons[i].x += dragonSpeed * dragonDir;
+        }
+      }
+
+      // Animate dragon wings
+      dragons.forEach(function(d){ d.frame++; });
+
+      // Dragon shooting
+      shootTimer++;
+      var fireRate = Math.max(30, 80 - wave * 8);
+      if(shootTimer > fireRate){
+        shootTimer = 0;
+        var alive = dragons.filter(function(d){return d.alive;});
+        if(alive.length > 0){
+          var shooter = alive[Math.floor(Math.random()*alive.length)];
+          dragonBullets.push({x:shooter.x+shooter.w/2-2, y:shooter.y+shooter.h, w:4, h:10});
+        }
+      }
+
+      // Update dragon bullets
+      for(var i=dragonBullets.length-1;i>=0;i--){
+        dragonBullets[i].y += 4 + wave * 0.3;
+        if(dragonBullets[i].y > H + 10) dragonBullets.splice(i,1);
+      }
+
+      // Bullet-dragon collision
+      for(var i=bullets.length-1;i>=0;i--){
+        for(var j=0;j<dragons.length;j++){
+          if(!dragons[j].alive) continue;
+          if(rectHit(bullets[i],dragons[j])){
+            dragons[j].alive = false;
+            spawnExplosion(dragons[j].x+dragons[j].w/2, dragons[j].y+dragons[j].h/2, '#f90');
+            bullets.splice(i,1);
+            score += (dragons[j].type+1) * 10;
+            break;
+          }
+        }
+      }
+
+      // Dragon bullet-player collision
+      for(var i=dragonBullets.length-1;i>=0;i--){
+        if(rectHit(dragonBullets[i], player)){
+          dragonBullets.splice(i,1);
+          lives--;
+          spawnExplosion(player.x+player.w/2, player.y+player.h/2, '#f44');
+          if(lives <= 0) gameOver = true;
+        }
+      }
+
+      // Dragon reaches player row
+      for(var i=0;i<dragons.length;i++){
+        if(dragons[i].alive && dragons[i].y + dragons[i].h >= player.y){
+          gameOver = true;
+        }
+      }
+
+      // Update particles
+      for(var i=particles.length-1;i>=0;i--){
+        particles[i].x += particles[i].vx;
+        particles[i].y += particles[i].vy;
+        particles[i].life--;
+        if(particles[i].life <= 0) particles.splice(i,1);
+      }
+
+      // Wave cleared
+      var allDead = dragons.every(function(d){return !d.alive;});
+      if(allDead){
+        wave++;
+        spawnWave();
+      }
+
+      // Update HUD
+      document.getElementById('game-score').textContent = 'SCORE: ' + score;
+      document.getElementById('game-lives').textContent = 'LIVES: ' + lives;
+      document.getElementById('game-wave').textContent = 'WAVE: ' + wave;
+    }
+
+    function rectHit(a,b){
+      return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
+    }
+
+    function draw(){
+      // Starry background
+      ctx.fillStyle = '#0a0a14';
+      ctx.fillRect(0,0,W,H);
+
+      // Stars
+      ctx.fillStyle = 'rgba(200,168,78,0.3)';
+      for(var i=0;i<40;i++){
+        var sx = (i*137.5)%W, sy = (i*97.3)%H;
+        ctx.fillRect(sx,sy,1,1);
+      }
+
+      // Draw dragons
+      dragons.forEach(function(d){
+        if(d.alive) drawDragon(d);
+      });
+
+      // Draw player
+      drawTyrion(player.x, player.y);
+
+      // Draw player bullets (golden wine drops)
+      ctx.fillStyle = '#c8a84e';
+      bullets.forEach(function(b){
+        ctx.fillRect(b.x,b.y,b.w,b.h);
+        ctx.fillStyle = '#f90';
+        ctx.fillRect(b.x,b.y,b.w,2);
+        ctx.fillStyle = '#c8a84e';
+      });
+
+      // Draw dragon bullets (fireballs)
+      dragonBullets.forEach(function(b){
+        ctx.fillStyle = '#f00';
+        ctx.fillRect(b.x,b.y,b.w,b.h);
+        ctx.fillStyle = '#f90';
+        ctx.fillRect(b.x+1,b.y,2,b.h);
+      });
+
+      // Draw particles
+      particles.forEach(function(p){
+        ctx.globalAlpha = p.life / 50;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x,p.y,p.size,p.size);
+      });
+      ctx.globalAlpha = 1;
+
+      // Game over screen
+      if(gameOver){
+        ctx.fillStyle = 'rgba(0,0,0,0.7)';
+        ctx.fillRect(0,0,W,H);
+
+        ctx.fillStyle = '#c62828';
+        ctx.font = '28px MedievalSharp';
+        ctx.textAlign = 'center';
+        ctx.fillText('THE REALM HAS FALLEN', W/2, H/2 - 30);
+
+        ctx.fillStyle = '#c8a84e';
+        ctx.font = '18px MedievalSharp';
+        ctx.fillText('Score: ' + score + '  |  Wave: ' + wave, W/2, H/2 + 10);
+
+        ctx.fillStyle = '#aaa';
+        ctx.font = '14px Inter';
+        ctx.fillText('Press SPACE or tap to play again', W/2, H/2 + 50);
+        ctx.textAlign = 'left';
+
+        // Restart on space/tap
+        if(keys[' '] || touchShoot){
+          score = 0; lives = 3; wave = 1; gameOver = false;
+          player.x = W/2 - 16;
+          bullets = []; dragonBullets = []; particles = [];
+          spawnWave();
+          keys[' '] = false;
+          touchShoot = false;
+        }
+      }
+    }
+
+    function gameLoop(){
+      if(!gameRunning){
+        document.removeEventListener('keydown', onKey);
+        document.removeEventListener('keyup', onKey);
+        return;
+      }
+      update();
+      draw();
+      gameAnimFrame = requestAnimationFrame(gameLoop);
+    }
+    gameLoop();
+  }
 
 })();
 </script>
