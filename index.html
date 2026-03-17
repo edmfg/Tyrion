@@ -1052,9 +1052,118 @@ body{
   transition:all 0.2s;
 }
 .game-close-btn:hover{background:rgba(198,40,40,0.9)}
+/* ===== UPDATES OVERLAY ===== */
+.updates-overlay{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,0.85);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);
+  animation:overlayFadeIn 0.4s ease;
+}
+@keyframes overlayFadeIn{from{opacity:0}to{opacity:1}}
+.updates-modal{
+  background:linear-gradient(135deg,#2a2218,#1e1a14);
+  border:3px solid var(--gold);border-radius:10px;
+  max-width:620px;width:90%;max-height:90vh;overflow-y:auto;
+  padding:28px 32px;position:relative;
+  box-shadow:0 0 40px rgba(200,168,78,0.3),0 8px 32px rgba(0,0,0,0.8);
+  animation:modalSlideIn 0.4s ease;
+}
+@keyframes modalSlideIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.updates-modal-date{font-family:var(--font-pixel);font-size:9px;color:var(--stone-light);margin-bottom:4px}
+.updates-modal-title{font-family:var(--font-medieval);font-size:clamp(28px,5vw,38px);color:var(--gold);margin-bottom:18px;text-shadow:0 2px 8px rgba(0,0,0,0.6)}
+.updates-modal-section{margin-bottom:16px;font-size:15px;line-height:1.7;color:var(--parchment)}
+.updates-modal-section p{margin-bottom:10px}
+.updates-modal-section .reminder-label{font-family:var(--font-pixel);font-size:9px;color:var(--gold);display:block;margin-bottom:6px}
+.updates-modal-section ul{padding-left:20px;margin:6px 0}
+.updates-modal-section li{margin-bottom:6px}
+.updates-modal-game-link{
+  display:inline-block;font-family:var(--font-pixel);font-size:10px;
+  color:var(--parchment);background:linear-gradient(180deg,var(--crimson-light),var(--crimson));
+  border:2px solid var(--gold);padding:10px 20px;cursor:pointer;border-radius:4px;
+  text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;
+  text-decoration:none;margin-top:4px;
+  box-shadow:0 3px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.updates-modal-game-link:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(139,26,26,0.5);background:linear-gradient(180deg,#d32f2f,var(--crimson))}
+.updates-modal-close{
+  display:block;margin:18px auto 0;font-family:var(--font-pixel);font-size:10px;
+  color:var(--gold);background:none;border:2px solid var(--gold);
+  padding:10px 28px;cursor:pointer;border-radius:4px;transition:all 0.2s;
+}
+.updates-modal-close:hover{background:rgba(200,168,78,0.15)}
+.updates-modal hr{border:none;border-top:1px solid var(--stone);margin:14px 0}
+
+/* ===== PAC-MAN GAME ===== */
+.pacman-overlay{
+  position:fixed;inset:0;z-index:10001;
+  background:rgba(0,0,0,0.92);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  backdrop-filter:blur(6px);
+}
+.pacman-overlay canvas{border:3px solid var(--gold);border-radius:4px;display:block;image-rendering:pixelated}
+.pacman-hud{display:flex;gap:20px;align-items:center;margin-bottom:10px;font-family:var(--font-pixel);font-size:10px;color:var(--gold)}
+.pacman-close{
+  margin-top:14px;font-family:var(--font-pixel);font-size:10px;
+  color:var(--gold);background:none;border:2px solid var(--gold);
+  padding:8px 20px;cursor:pointer;border-radius:4px;transition:all 0.2s;
+}
+.pacman-close:hover{background:rgba(200,168,78,0.15)}
 </style>
 </head>
 <body>
+
+<!-- UPDATES OVERLAY -->
+<div class="updates-overlay" id="updatesOverlay">
+  <div class="updates-modal">
+    <div class="updates-modal-date">📅 March 17, 2026</div>
+    <div class="updates-modal-title">📢 Updates</div>
+
+    <div class="updates-modal-section">
+      <p>🔖 <strong>Bookmark this dashboard.</strong> Erica will update this once a month AFTER the latest updates are made by every market. Send her any UI suggestions. 💡</p>
+    </div>
+
+    <hr>
+
+    <div class="updates-modal-section">
+      <p>🔒 <strong>Tyrion is for MFG/us to keep track.</strong> Do not give clients edit access. Share screen or export instead. 🖥️</p>
+    </div>
+
+    <hr>
+
+    <div class="updates-modal-section">
+      <span class="reminder-label">⚔️ MARKET WARDENS</span>
+      <p style="font-size:13px;color:#aaa;margin-bottom:8px"><em>(You will be sent a trix from Erica to update. We will kill the slides in April.)</em></p>
+      <ul>
+        <li>🏰 <strong>Kingdom Germany:</strong> Stefi P.</li>
+        <li>🏰 <strong>Kingdom UK:</strong> Lizzie M.</li>
+        <li>🏰 <strong>Kingdom Japan:</strong> Ryu N.</li>
+        <li>🏰 <strong>Kingdom India:</strong> Averill S.</li>
+        <li>🏰 <strong>Kingdom B2B:</strong> Val P.</li>
+        <li>🏰 <strong>Kingdom USA:</strong> Erica</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <div class="updates-modal-section">
+      <span class="reminder-label">📝 REMINDERS</span>
+      <ul>
+        <li><strong>(A) Make Your Work Smarter.</strong> 🧠 Look at Tyrion once when developing your local market strategy to identify any opportunities/overlaps.</li>
+        <li><strong>(B) Help merchandise MFG's unique global scale.</strong> 🌍 When presenting to clients, let them know that we/MFG are tracking all domains, everywhere.</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <div class="updates-modal-section" style="text-align:center">
+      <p>🎮 A game in reward for your attention.</p>
+      <a href="#" class="updates-modal-game-link" onclick="event.preventDefault();document.getElementById('updatesOverlay').style.display='none';launchPacman();">🕹️ PLAY NOW</a>
+    </div>
+
+    <button class="updates-modal-close" onclick="document.getElementById('updatesOverlay').style.display='none'">✖ CLOSE &amp; CONTINUE</button>
+  </div>
+</div>
 
 <!-- Raven -->
 <div class="pixel-raven" id="raven">
@@ -2735,6 +2844,305 @@ body{
   }
 
 })();
+
+// ===== PAC-MAN GAME (Tyrion Edition) =====
+function launchPacman(){
+  // Create overlay
+  const ov = document.createElement('div');
+  ov.className='pacman-overlay';
+  ov.id='pacmanOverlay';
+
+  // HUD
+  const hud = document.createElement('div');
+  hud.className='pacman-hud';
+  hud.innerHTML='<span id="pac-score">SCORE: 0</span><span id="pac-lives">❤️❤️❤️</span>';
+  ov.appendChild(hud);
+
+  // Canvas
+  const cvs = document.createElement('canvas');
+  const S = Math.min(window.innerWidth-40, window.innerHeight-120, 480);
+  cvs.width = S; cvs.height = S;
+  ov.appendChild(cvs);
+
+  // Close button
+  const cb = document.createElement('button');
+  cb.className='pacman-close';
+  cb.textContent='✖ EXIT GAME';
+  cb.onclick=function(){ov.remove(); pacRunning=false;};
+  ov.appendChild(cb);
+
+  // Mobile controls hint
+  const hint = document.createElement('div');
+  hint.style.cssText='font-family:var(--font-pixel);font-size:8px;color:#666;margin-top:8px;text-align:center';
+  hint.textContent='ARROW KEYS / SWIPE TO MOVE';
+  ov.appendChild(hint);
+
+  document.body.appendChild(ov);
+
+  // Game logic
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
+  const COLS=15, ROWS=15;
+  const CW=W/COLS, CH=H/ROWS;
+  let pacRunning=true, score=0, lives=3, level=1;
+
+  // Simple maze (0=path, 1=wall, 2=dot, 3=power pellet)
+  function buildMaze(){
+    const m=[
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,2,1],
+      [1,2,1,1,2,1,2,2,2,1,2,1,1,2,1],
+      [1,3,2,2,2,2,2,2,2,2,2,2,2,3,1],
+      [1,2,1,2,1,1,2,1,2,1,1,2,1,2,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,2,1],
+      [1,1,1,2,1,2,2,2,2,2,1,2,1,1,1],
+      [1,2,2,2,1,2,1,0,1,2,1,2,2,2,1],
+      [1,1,1,2,1,2,2,2,2,2,1,2,1,1,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,2,1],
+      [1,2,1,2,1,1,2,1,2,1,1,2,1,2,1],
+      [1,3,2,2,2,2,2,2,2,2,2,2,2,3,1],
+      [1,2,1,1,2,1,2,2,2,1,2,1,1,2,1],
+      [1,2,2,2,2,2,2,1,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ];
+    return m;
+  }
+
+  let maze=buildMaze();
+  let totalDots=0;
+  maze.forEach(r=>r.forEach(c=>{if(c===2||c===3)totalDots++;}));
+  let dotsEaten=0;
+
+  // Tyrion (pac-man)
+  let tyrion={col:7,row:7,dir:{x:0,y:0},nextDir:{x:0,y:0},moveTimer:0};
+
+  // Ghosts
+  let ghosts=[];
+  let powerMode=false, powerTimer=0;
+  function spawnGhosts(){
+    const colors=['#ff0000','#ff69b4','#00ffff','#ff8c00'];
+    const starts=[[1,1],[13,1],[1,13],[13,13]];
+    ghosts=starts.map((s,i)=>({col:s[0],row:s[1],color:colors[i],dir:{x:0,y:0},moveTimer:0,scared:false}));
+  }
+  spawnGhosts();
+
+  // Input
+  let inputDir={x:0,y:0};
+  function onKeyPac(e){
+    if(e.key==='ArrowLeft'){inputDir={x:-1,y:0};e.preventDefault();}
+    if(e.key==='ArrowRight'){inputDir={x:1,y:0};e.preventDefault();}
+    if(e.key==='ArrowUp'){inputDir={x:0,y:-1};e.preventDefault();}
+    if(e.key==='ArrowDown'){inputDir={x:0,y:1};e.preventDefault();}
+  }
+  document.addEventListener('keydown',onKeyPac);
+
+  // Touch/swipe
+  let touchStart=null;
+  cvs.addEventListener('touchstart',function(e){touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});
+  cvs.addEventListener('touchend',function(e){
+    if(!touchStart)return;
+    const dx=e.changedTouches[0].clientX-touchStart.x;
+    const dy=e.changedTouches[0].clientY-touchStart.y;
+    if(Math.abs(dx)>Math.abs(dy)){inputDir=dx>0?{x:1,y:0}:{x:-1,y:0};}
+    else{inputDir=dy>0?{x:0,y:1}:{x:0,y:-1};}
+    touchStart=null;
+  });
+
+  function canMove(col,row){return col>=0&&col<COLS&&row>=0&&row<ROWS&&maze[row][col]!==1;}
+
+  const MOVE_SPEED=8; // frames per move
+  const GHOST_SPEED=10;
+
+  function updatePac(){
+    tyrion.moveTimer++;
+    if(tyrion.moveTimer>=MOVE_SPEED){
+      tyrion.moveTimer=0;
+      // Try next direction first
+      const nc=tyrion.col+inputDir.x, nr=tyrion.row+inputDir.y;
+      if(canMove(nc,nr)){tyrion.dir=inputDir;}
+      const mc=tyrion.col+tyrion.dir.x, mr=tyrion.row+tyrion.dir.y;
+      if(canMove(mc,mr)){
+        tyrion.col=mc; tyrion.row=mr;
+        // Eat dot
+        if(maze[mr][mc]===2){maze[mr][mc]=0;score+=10;dotsEaten++;}
+        if(maze[mr][mc]===3){maze[mr][mc]=0;score+=50;dotsEaten++;powerMode=true;powerTimer=300;ghosts.forEach(g=>g.scared=true);}
+      }
+    }
+  }
+
+  function updateGhosts(){
+    if(powerMode){powerTimer--;if(powerTimer<=0){powerMode=false;ghosts.forEach(g=>g.scared=false);}}
+    ghosts.forEach(g=>{
+      g.moveTimer++;
+      const spd=g.scared?GHOST_SPEED+4:GHOST_SPEED;
+      if(g.moveTimer>=spd){
+        g.moveTimer=0;
+        // Simple AI: random valid direction, biased toward Tyrion
+        const dirs=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+        let valid=dirs.filter(d=>canMove(g.col+d.x,g.row+d.y));
+        if(valid.length===0)return;
+        // Bias toward/away from Tyrion
+        if(!g.scared&&Math.random()<0.6){
+          valid.sort((a,b)=>{
+            const da=Math.abs(g.col+a.x-tyrion.col)+Math.abs(g.row+a.y-tyrion.row);
+            const db=Math.abs(g.col+b.x-tyrion.col)+Math.abs(g.row+b.y-tyrion.row);
+            return da-db;
+          });
+        }else if(g.scared&&Math.random()<0.7){
+          valid.sort((a,b)=>{
+            const da=Math.abs(g.col+a.x-tyrion.col)+Math.abs(g.row+a.y-tyrion.row);
+            const db=Math.abs(g.col+b.x-tyrion.col)+Math.abs(g.row+b.y-tyrion.row);
+            return db-da;
+          });
+        }else{valid.sort(()=>Math.random()-0.5);}
+        const pick=valid[0];
+        g.col+=pick.x; g.row+=pick.y; g.dir=pick;
+      }
+      // Collision with Tyrion
+      if(g.col===tyrion.col&&g.row===tyrion.row){
+        if(g.scared){g.col=7;g.row=7;g.scared=false;score+=200;}
+        else{lives--;tyrion.col=7;tyrion.row=7;tyrion.dir={x:0,y:0};inputDir={x:0,y:0};}
+      }
+    });
+  }
+
+  function drawTyrion(x,y,size){
+    // Draw pixel Tyrion (simplified)
+    const s=size/16;
+    ctx.fillStyle='#c8a84e'; // hair/crown
+    ctx.fillRect(x+5*s,y+1*s,6*s,3*s);
+    ctx.fillRect(x+4*s,y+2*s,1*s,3*s);
+    ctx.fillRect(x+11*s,y+2*s,1*s,3*s);
+    ctx.fillStyle='#e8b88a'; // face
+    ctx.fillRect(x+5*s,y+4*s,6*s,4*s);
+    ctx.fillStyle='#333'; // eyes
+    ctx.fillRect(x+6*s,y+5*s,1*s,1*s);
+    ctx.fillRect(x+9*s,y+5*s,1*s,1*s);
+    ctx.fillStyle='#c77'; // mouth
+    ctx.fillRect(x+7*s,y+7*s,2*s,1*s);
+    ctx.fillStyle='#8b1a1a'; // body
+    ctx.fillRect(x+4*s,y+8*s,8*s,5*s);
+    ctx.fillStyle='#c8a84e'; // belt
+    ctx.fillRect(x+4*s,y+11*s,8*s,1*s);
+    ctx.fillStyle='#4a3728'; // boots
+    ctx.fillRect(x+5*s,y+13*s,2*s,2*s);
+    ctx.fillRect(x+9*s,y+13*s,2*s,2*s);
+    // wine
+    ctx.fillStyle='#c8a84e';
+    ctx.fillRect(x+12*s,y+8*s,3*s,1*s);
+    ctx.fillRect(x+12*s,y+9*s,2*s,1*s);
+    ctx.fillStyle='#722';
+    ctx.fillRect(x+13*s,y+7*s,1*s,1*s);
+  }
+
+  function draw(){
+    ctx.fillStyle='#000';
+    ctx.fillRect(0,0,W,H);
+    // Maze
+    for(let r=0;r<ROWS;r++){
+      for(let c=0;c<COLS;c++){
+        const x=c*CW, y=r*CH;
+        if(maze[r][c]===1){
+          ctx.fillStyle='#1a1a6b';
+          ctx.fillRect(x+1,y+1,CW-2,CH-2);
+          ctx.strokeStyle='#3333cc';
+          ctx.lineWidth=2;
+          ctx.strokeRect(x+1,y+1,CW-2,CH-2);
+        }else if(maze[r][c]===2){
+          ctx.fillStyle='#c8a84e';
+          ctx.beginPath();
+          ctx.arc(x+CW/2,y+CH/2,CW*0.12,0,Math.PI*2);
+          ctx.fill();
+        }else if(maze[r][c]===3){
+          ctx.fillStyle='#c8a84e';
+          ctx.beginPath();
+          ctx.arc(x+CW/2,y+CH/2,CW*0.25,0,Math.PI*2);
+          ctx.fill();
+        }
+      }
+    }
+    // Tyrion
+    const pad=CW*0.05;
+    drawTyrion(tyrion.col*CW+pad, tyrion.row*CH+pad, CW-pad*2);
+    // Ghosts
+    ghosts.forEach(g=>{
+      ctx.fillStyle=g.scared?'#3333ff':g.color;
+      const gx=g.col*CW+CW*0.1, gy=g.row*CH+CH*0.1, gw=CW*0.8, gh=CH*0.8;
+      ctx.beginPath();
+      ctx.arc(gx+gw/2,gy+gh*0.4,gw/2,Math.PI,0);
+      ctx.lineTo(gx+gw,gy+gh);
+      // wavy bottom
+      for(let i=4;i>=0;i--){
+        const wx=gx+gw*(i/4);
+        const wy=gy+gh-(i%2===0?gh*0.15:0);
+        ctx.lineTo(wx,wy);
+      }
+      ctx.closePath();ctx.fill();
+      // eyes
+      ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.arc(gx+gw*0.35,gy+gh*0.35,gw*0.15,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(gx+gw*0.65,gy+gh*0.35,gw*0.15,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=g.scared?'#fff':'#111';
+      ctx.beginPath();ctx.arc(gx+gw*0.35,gy+gh*0.35,gw*0.07,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(gx+gw*0.65,gy+gh*0.35,gw*0.07,0,Math.PI*2);ctx.fill();
+    });
+    // HUD
+    document.getElementById('pac-score').textContent='SCORE: '+score;
+    document.getElementById('pac-lives').textContent='❤️'.repeat(Math.max(0,lives));
+  }
+
+  let gameState='playing'; // playing, win, dead
+  function gameLoopPac(){
+    if(!pacRunning)return;
+    if(gameState==='playing'){
+      updatePac();
+      updateGhosts();
+      if(dotsEaten>=totalDots){gameState='win';}
+      if(lives<=0){gameState='dead';}
+    }
+    draw();
+    if(gameState==='win'){
+      ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#c8a84e';ctx.font='bold 28px MedievalSharp';ctx.textAlign='center';
+      ctx.fillText('🏆 A LANNISTER ALWAYS WINS!',W/2,H/2-10);
+      ctx.font='14px Inter';ctx.fillStyle='#aaa';
+      ctx.fillText('Score: '+score,W/2,H/2+30);
+      ctx.fillText('Press SPACE or tap to replay',W/2,H/2+60);
+      ctx.textAlign='left';
+      document.addEventListener('keydown',function restart(e){
+        if(e.key===' '){e.preventDefault();document.removeEventListener('keydown',restart);resetPac();}
+      });
+      cvs.addEventListener('touchend',function restartT(){cvs.removeEventListener('touchend',restartT);resetPac();},{once:true});
+      return;
+    }
+    if(gameState==='dead'){
+      ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#8b1a1a';ctx.font='bold 28px MedievalSharp';ctx.textAlign='center';
+      ctx.fillText('☠️ VALAR MORGHULIS',W/2,H/2-10);
+      ctx.font='14px Inter';ctx.fillStyle='#aaa';
+      ctx.fillText('Score: '+score,W/2,H/2+30);
+      ctx.fillText('Press SPACE or tap to try again',W/2,H/2+60);
+      ctx.textAlign='left';
+      document.addEventListener('keydown',function restart(e){
+        if(e.key===' '){e.preventDefault();document.removeEventListener('keydown',restart);resetPac();}
+      });
+      cvs.addEventListener('touchend',function restartT(){cvs.removeEventListener('touchend',restartT);resetPac();},{once:true});
+      return;
+    }
+    requestAnimationFrame(gameLoopPac);
+  }
+
+  function resetPac(){
+    maze=buildMaze();dotsEaten=0;totalDots=0;
+    maze.forEach(r=>r.forEach(c=>{if(c===2||c===3)totalDots++;}));
+    score=0;lives=3;
+    tyrion.col=7;tyrion.row=7;tyrion.dir={x:0,y:0};inputDir={x:0,y:0};
+    spawnGhosts();gameState='playing';
+    requestAnimationFrame(gameLoopPac);
+  }
+
+  requestAnimationFrame(gameLoopPac);
+}
 </script>
 </body>
 </html>
